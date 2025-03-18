@@ -1,0 +1,19 @@
+{
+    "name": "HexTecGames.UpgradeSystem.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4b15c8b473153fd48b7d58c11fe5b50f",
+        "GUID:98b8d7eb7e7b1b64db198709f2a21aca"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
