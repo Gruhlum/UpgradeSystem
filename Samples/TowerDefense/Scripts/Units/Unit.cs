@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
+namespace HexTecGames.UpgradeSystem.TowerDefense
 {
     [System.Serializable]
     public class Unit : MonoBehaviour

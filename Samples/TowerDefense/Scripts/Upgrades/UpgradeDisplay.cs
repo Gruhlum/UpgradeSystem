@@ -4,7 +4,7 @@ using HexTecGames.Basics.UI;
 using TMPro;
 using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
+namespace HexTecGames.UpgradeSystem.TowerDefense
 {
     public class UpgradeDisplay : Display<UpgradeDisplay, Upgrade>
     {

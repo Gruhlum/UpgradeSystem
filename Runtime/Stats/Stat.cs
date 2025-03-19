@@ -68,6 +68,23 @@ namespace HexTecGames.UpgradeSystem
             this.StatType = statType;
         }
 
+        public Stat CreateCopy()
+        {
+            Stat stat = InstantiateCopy();
+            CopyValues(stat);
+            return stat;
+        }
+        protected virtual Stat InstantiateCopy()
+        {
+            return new Stat(StatType);
+        }
+        protected virtual void CopyValues(Stat stat)
+        {
+            stat.Value = this.Value;
+            stat.UpgradeIncrease = this.UpgradeIncrease;
+            stat.Formatting = this.Formatting;
+        }
+
         public virtual void ApplyData(List<Stat> allStats, StatData statData)
         {
             ApplyData(statData.startValue, statData.increase, statData.formatting);

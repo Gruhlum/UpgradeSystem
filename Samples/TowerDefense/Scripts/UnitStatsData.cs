@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
+namespace HexTecGames.UpgradeSystem.TowerDefense
 {
-    [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/UnitStatsData")]
+    [CreateAssetMenu(menuName = "HexTecGames/TowerDefense/UnitStatsData")]
     public class UnitStatsData : ScriptableObject
     {
         public StatData MaxHP;

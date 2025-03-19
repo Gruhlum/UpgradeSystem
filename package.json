@@ -1,12 +1,17 @@
 {
   "name": "com.hextecgames.upgradesystem",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "UpgradeSystem",
   "description": "My Package",
   "unity": "2019.1",
-  "dependencies": {},
   "author": {
     "name": "HexTecGames"
   },
-  "hideInEditor": "false"
+  "samples": [
+    {
+      "displayName": "TowerDefense",
+      "description": "Default Example",
+      "path": "Samples/TowerDefense"
+    }
+  ]
 }

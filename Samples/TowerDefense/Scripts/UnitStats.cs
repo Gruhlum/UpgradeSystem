@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using HexTecGames.Basics.Decks;
 using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
+namespace HexTecGames.UpgradeSystem.TowerDefense
 {
     [System.Serializable]
     public class UnitStats
@@ -18,6 +18,19 @@ namespace HexTecGames.UpgradeSystem
         private List<Stat> allStats = new List<Stat>();
 
         private BoolDeck critDeck;
+
+
+        public UnitStats CreateCopy()
+        {
+            UnitStats clone = new UnitStats();
+            clone.Damage = Damage.CreateCopy();
+            clone.CritChance = CritChance.CreateCopy();
+            clone.CritMultiplier = CritMultiplier.CreateCopy();
+            clone.AttackSpeed = AttackSpeed.CreateCopy();
+            clone.MaxHP = MaxHP.CreateCopy();
+            clone.CurrentHP = CurrentHP.CreateCopy() as ClampedStat;
+            return clone;
+        }
 
         public void Setup(UnitStatsData data)
         {
@@ -83,5 +96,7 @@ namespace HexTecGames.UpgradeSystem
 
             return new AttackData(totalDamage, isCrit);
         }
+
+
     }
 }

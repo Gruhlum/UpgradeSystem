@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
+namespace HexTecGames.UpgradeSystem.TowerDefense
 {
     public class UpgradeController : MonoBehaviour
     {

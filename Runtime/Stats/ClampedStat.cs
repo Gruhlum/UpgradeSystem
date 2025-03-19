@@ -28,6 +28,23 @@ namespace HexTecGames.UpgradeSystem
         {
         }
 
+        protected override Stat InstantiateCopy()
+        {
+            return new ClampedStat(StatType);
+        }
+        protected override void CopyValues(Stat stat)
+        {
+            base.CopyValues(stat);
+            if (stat is ClampedStat clampedClone)
+            {
+                clampedClone.minValue = minValue;
+                clampedClone.maxValue = maxValue;
+                clampedClone.minStat = minStat;
+                clampedClone.maxStat = maxStat;
+                clampedClone.minClamp = minClamp;
+                clampedClone.maxClamp = maxClamp;
+            }
+        }
         public override void ApplyData(List<Stat> allStats, StatData statData)
         {
             base.ApplyData(allStats, statData);
