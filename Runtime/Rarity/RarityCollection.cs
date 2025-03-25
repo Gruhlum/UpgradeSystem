@@ -16,5 +16,17 @@ namespace HexTecGames.UpgradeSystem
             index = Mathf.Clamp(index, 0, rarities.Count - 1);
             return rarities[index];
         }
+        public Rarity GetRarityByIndex(int index)
+        {
+            if (index < 0 || index >= rarities.Count)
+            {
+                return null;
+            }
+            return rarities[index];
+        }
+        public int GetIndex(Rarity rarity)
+        {
+            return rarities.IndexOf(rarity);
+        }
     }
 }

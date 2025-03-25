@@ -8,7 +8,6 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
     {
         private List<Unit> units = new List<Unit>();
         private UnitStats unitStats;
-        [SerializeField] private UnitStatsData playerStatsData = default;
 
         private void Awake()
         {

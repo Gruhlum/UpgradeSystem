@@ -7,6 +7,6 @@ namespace HexTecGames.UpgradeSystem
     [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/StatType")]
     public class StatType : ScriptableObject
     {
-        
+        [SerializeField] private Sprite icon = default;
     }
 }

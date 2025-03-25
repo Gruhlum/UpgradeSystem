@@ -13,7 +13,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         public Stat CritMultiplier;
         public Stat AttackSpeed;
         public Stat MaxHP;
-        public ClampedStat CurrentHP;
+        //public ClampedStat CurrentHP;
 
         private List<Stat> allStats = new List<Stat>();
 
@@ -28,32 +28,10 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
             clone.CritMultiplier = CritMultiplier.CreateCopy();
             clone.AttackSpeed = AttackSpeed.CreateCopy();
             clone.MaxHP = MaxHP.CreateCopy();
-            clone.CurrentHP = CurrentHP.CreateCopy() as ClampedStat;
+            //clone.CurrentHP = CurrentHP.CreateCopy() as ClampedStat;
             return clone;
         }
-
-        public void Setup(UnitStatsData data)
-        {
-            AddStat(Damage);
-            AddStat(CritChance);
-            AddStat(CritMultiplier);
-            AddStat(AttackSpeed);
-            AddStat(MaxHP);
-
-            CurrentHP = new ClampedStat(CurrentHP.StatType);
-            AddStat(CurrentHP);
-
-            ApplyData(Damage, data.Damage);
-            ApplyData(CritChance, data.CritChance);
-            ApplyData(CritMultiplier, data.CritMulti);
-            ApplyData(AttackSpeed, data.AttackSpeed);
-            ApplyData(MaxHP, data.MaxHP);
-
-            CritChance.OnValueChanged += CritChance_OnValueChanged;
-            CreateCritDeck();
-            CurrentHP.SetMaxValue(MaxHP);
-            CurrentHP.Value = MaxHP.Value;
-        }
+        
 
         private void CritChance_OnValueChanged(Stat stat, int value)
         {
@@ -64,11 +42,6 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         {
             critDeck = new BoolDeck(CritChance.Value, 100 - CritChance.Value);
         }
-
-        private void ApplyData(Stat stat, StatData data)
-        {
-            stat.ApplyData(allStats, data);
-        }
         private void AddStat(Stat stat)
         {
             allStats.Add(stat);
@@ -78,23 +51,24 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         {
             List<Upgrade> validUpgrades = new List<Upgrade>();
 
-            foreach (var stat in allStats)
-            {
-                validUpgrades.Add(stat.GetUpgrade());
-            }
+            //foreach (var stat in allStats)
+            //{
+            //    validUpgrades.Add(stat.GetUpgrade());
+            //}
 
             return validUpgrades;
         }
         public AttackData GetAttackData()
         {
             int totalDamage = Damage.Value;
-            bool isCrit = critDeck.RevealNextCard();
-            if (isCrit)
-            {
-                totalDamage += (totalDamage * CritMultiplier.Value / 100);
-            }
+            //bool isCrit = critDeck.RevealNextCard();
+            //if (isCrit)
+            //{
+            //    totalDamage += (totalDamage * CritMultiplier.Value / 100);
+            //}
 
-            return new AttackData(totalDamage, isCrit);
+            //return new AttackData(totalDamage, isCrit);
+            return null;
         }
 
 

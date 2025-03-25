@@ -8,23 +8,30 @@ namespace HexTecGames.UpgradeSystem
     public class Upgrade
     {
         public Stat stat;
-        public int increase;
+        public Rarity rarity;
+        public int tickets;
+        private UpgradeInfo upgradeInfo;
 
-        public Upgrade(Stat stat, int increase)
+        public Upgrade(UpgradeInfo upgradeInfo, Stat stat, Rarity rarity, int tickets)
         {
+            this.upgradeInfo = upgradeInfo;
             this.stat = stat;
-            this.increase = increase;
-        }
-
-        public void Apply()
-        {
-            stat.Value += increase;
-            Debug.Log($"Increased {stat.StatType} by {increase} ({stat.Value})");
+            this.rarity = rarity;
+            this.tickets = tickets;
         }
 
         public string GetDescription()
         {
-            return stat.GetUpgradeDescription();
+            return upgradeInfo.GetMainDescription(stat, rarity);
+        }
+        public string GetExtraDescription()
+        {
+            return upgradeInfo.GetBonusDescription(stat, rarity);
+        }
+
+        public void Apply()
+        {
+            stat.Upgrade(rarity);
         }
     }
 }

@@ -8,9 +8,6 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
     [System.Serializable]
     public class Unit : MonoBehaviour
     {
-        //[SerializeField] private BetterDamageTextController damageTextController = default;
-        [SerializeField] private UnitStatsData defaultStats = default;
-
         [SerializeField] private UnitStats unitStats;
 
         private int secondsPerAttack = 1;
@@ -30,12 +27,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         private PermissionGroup enable = new PermissionGroup();
 
 
-        private void Awake()
-        {
-            unitStats.Setup(defaultStats);
-        }
-
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             if (!enable.Allowed)
             {

@@ -5,5 +5,9 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     public enum StatClamp { None, Value, Stat }
-    public enum UpgradeType { Fixed, Increasing }
+    public enum ClampType { Min, Max }
+    public enum UpgradeType { None, Normal, Flat, RarityIncrease, Percent }
+    public enum EquationSymbol { Equal, Greater, Less }
+    public enum ConditionType { All, Any }
+    public enum FormattingType { None, Percent, Custom }
 }

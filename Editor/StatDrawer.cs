@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem.Editor
 {
-    [CustomPropertyDrawer(typeof(Stat), true)]
+    //[CustomPropertyDrawer(typeof(Stat), true)]
     public class StatDrawer : SingleLineDrawer
     {
         protected override string PropertyName

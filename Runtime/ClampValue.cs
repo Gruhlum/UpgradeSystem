@@ -8,15 +8,55 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public class ClampValue
     {
-        public StatClamp clampType;
-        //[DrawIf(nameof(clampType), StatClamp.Value)] 
         public int value;
-        //[DrawIf(nameof(clampType), StatClamp.Stat)] 
+        [SerializeField, SerializeReference] private Stat stat;
         public StatType statType;
+        [SerializeField] private ClampType clampType;
+        public StatClamp statClamp;
 
-        public ClampValue(StatClamp clampType)
+        public ClampValue(ClampType clampType, int value)
         {
+            this.value = value;
             this.clampType = clampType;
+        }
+        public ClampValue(ClampType clampType, Stat stat) : this(clampType, stat.Value)
+        {
+            this.stat = stat;
+            stat.OnValueChanged += Stat_OnValueChanged;
+        }
+
+        public void ValidateData(StatsCollection statsCollection)
+        {
+            if (stat == null || stat.StatType != statType)
+            {
+                stat = statsCollection.Find(statType);
+            }
+        }
+
+        private void Stat_OnValueChanged(Stat stat, int value)
+        {
+            this.value = value;
+        }
+
+        public int Clamp(int input)
+        {
+            if (clampType == ClampType.Max)
+            {
+                return Mathf.Min(input, value);
+            }
+            else return Mathf.Max(input, value);
+        }
+
+        public ClampValue CreateCopy()
+        {
+            ClampValue clone;
+            if (stat != null)
+            {
+                clone = new ClampValue(clampType, stat);
+            }
+            else clone = new ClampValue(clampType, value);
+
+            return clone;
         }
     }
 }

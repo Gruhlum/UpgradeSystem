@@ -5,13 +5,11 @@ using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem.Editor
 {
-    [CustomPropertyDrawer(typeof(ClampValue))]
-    public class ClampValueDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ClampValueData))]
+    public class ClampValueDataDrawer : PropertyDrawer
     {
-
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            // The 6 comes from extra spacing between the fields (2px each)
             return EditorGUIUtility.singleLineHeight;
         }
 
