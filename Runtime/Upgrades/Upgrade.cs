@@ -5,33 +5,21 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class Upgrade
+    public abstract class Upgrade
     {
-        public Stat stat;
         public Rarity rarity;
         public int tickets;
-        private UpgradeInfo upgradeInfo;
 
-        public Upgrade(UpgradeInfo upgradeInfo, Stat stat, Rarity rarity, int tickets)
+        protected Upgrade(Rarity rarity, int tickets)
         {
-            this.upgradeInfo = upgradeInfo;
-            this.stat = stat;
             this.rarity = rarity;
             this.tickets = tickets;
         }
 
-        public string GetDescription()
-        {
-            return upgradeInfo.GetMainDescription(stat, rarity);
-        }
-        public string GetExtraDescription()
-        {
-            return upgradeInfo.GetBonusDescription(stat, rarity);
-        }
+        public abstract string GetDescription();
 
-        public void Apply()
-        {
-            stat.Upgrade(rarity);
-        }
+        public abstract string GetExtraDescription();
+
+        public abstract void Apply();
     }
 }

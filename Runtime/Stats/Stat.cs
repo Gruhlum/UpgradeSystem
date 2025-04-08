@@ -23,19 +23,6 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private StatType statType;
 
-        public int Value
-        {
-            get
-            {
-                return value;
-            }
-            private set
-            {
-                this.value = value;
-            }
-        }
-        private int value;
-
         public virtual int FlatValue
         {
             get
@@ -50,7 +37,8 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private int flatValue;
 
-        private List<int> multipliers = new List<int>();
+        [SerializeField] private ClampValueData minValueData;
+        [SerializeField] private ClampValueData maxValueData;
 
         public UpgradeInfo UpgradeInfo
         {
@@ -66,20 +54,18 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private UpgradeInfo upgradeInfo;
 
-        [SerializeField] private FormattingType formatting = default;
-
-        private string CustomFormatting
+        public int Value
         {
             get
             {
-                return customFormatting;
+                return value;
             }
-            set
+            private set
             {
-                customFormatting = value;
+                this.value = value;
             }
         }
-        [SerializeField, DrawIf(nameof(formatting), FormattingType.Custom)] private string customFormatting;
+        private int value;
 
         public ClampValue MinValue
         {
@@ -107,10 +93,11 @@ namespace HexTecGames.UpgradeSystem
         }
         private ClampValue maxValue;
 
-        [SerializeField] private ClampValueData minValueData;
-        [SerializeField] private ClampValueData maxValueData;
+        private List<ValueChange> multipliers = new List<ValueChange>();
+
 
         public event Action<Stat, int> OnValueChanged;
+
 
         public Stat(StatType statType)
         {
@@ -134,8 +121,6 @@ namespace HexTecGames.UpgradeSystem
             this.FlatValue = stat.FlatValue;
             this.Value = stat.Value;
             this.UpgradeInfo = stat.UpgradeInfo;
-            this.formatting = stat.formatting;
-            this.CustomFormatting = stat.CustomFormatting;
             if (stat.MinValue != null) this.MinValue = stat.MinValue.CreateCopy();
             if (stat.MaxValue != null) this.MaxValue = stat.MaxValue.CreateCopy();
             this.minValueData = stat.minValueData.CreateCopy();
@@ -146,29 +131,31 @@ namespace HexTecGames.UpgradeSystem
             stat.CopyFrom(this);
         }
 
-        public string GetFormatting()
+        public void AddMultiplier(ValueChange multiplier)
         {
-            switch (formatting)
-            {
-                case FormattingType.None:
-                    return string.Empty;
-                case FormattingType.Percent:
-                    return "#.'%'";
-                case FormattingType.Custom:
-                    return CustomFormatting;
-                default:
-                    return string.Empty;
-            }
-        }
-
-        public void AddMultiplier(int multiplier)
-        {
+            multiplier.OnRemoved += Multiplier_OnRemoved;
+            multiplier.OnValueChanged += Multiplier_OnValueChanged;
             multipliers.Add(multiplier);
             UpdateValue();
         }
+
+        private void Multiplier_OnValueChanged(ValueChange multiplier, int value)
+        {
+            UpdateValue();
+        }
+
+        private void Multiplier_OnRemoved(ValueChange multiplier)
+        {
+            multiplier.OnRemoved -= Multiplier_OnRemoved;
+            multiplier.OnValueChanged -= Multiplier_OnValueChanged;
+            multipliers.Remove(multiplier);
+            UpdateValue();
+        }
+
         private void UpdateValue()
         {
             Value = CalculateValue();
+            OnValueChanged?.Invoke(this, Value);
         }
 
         private int CalculateValue()
@@ -189,10 +176,10 @@ namespace HexTecGames.UpgradeSystem
                 return baseValue;
             }
 
-            float multi = 1 + multipliers[0] / 100f;
+            float multi = 1 + multipliers[0].Value / 100f;
             for (int i = 1; i < multipliers.Count; i++)
             {
-                multi *= multipliers[i] / 100f; // 4.14
+                multi *= multipliers[i].Value / 100f; // 4.14
             }
 
             return baseValue += Mathf.RoundToInt(baseValue * multi); // 82.8
@@ -202,14 +189,14 @@ namespace HexTecGames.UpgradeSystem
         {
             MinValue = minValueData.GenerateClampValue(ClampType.Min, allStats);
             MaxValue = maxValueData.GenerateClampValue(ClampType.Max, allStats);
+            multipliers = new List<ValueChange>();
             UpdateValue();
         }
 
-        public void ApplyData(int startValue, UpgradeInfo upgradeInfo, string formatting = null)
+        public void ApplyData(int startValue, UpgradeInfo upgradeInfo)
         {
             this.Value = startValue;
             this.UpgradeInfo = upgradeInfo;
-            this.CustomFormatting = formatting;
         }
         public bool IsUpgradeable(Rarity rarity, List<Stat> allStats)
         {
@@ -233,9 +220,17 @@ namespace HexTecGames.UpgradeSystem
         }
         public override string ToString()
         {
-            return $"{StatType.name}: {Value.ToString(GetFormatting())}";
+            return $"{StatType.name}: {Value.ToString(StatType.Formatting)}";
         }
 
+        public string GetValueString()
+        {
+            if (StatType.IsPercent)
+            {
+                return Value.ToString(StatType.Formatting);
+            }
+            else return Value.ToString(StatType.Formatting);
+        }
         //public string GetUpgradeDescription()
         //{
         //    return $"{StatType.name}{Environment.NewLine} {Value.ToString(Formatting)} -> {(Value + upgradeValue.increase).ToString(Formatting)}";
@@ -294,7 +289,6 @@ namespace HexTecGames.UpgradeSystem
                    EqualityComparer<StatType>.Default.Equals(this.StatType, stat.StatType) &&
                    this.Value == stat.Value &&
                    this.UpgradeInfo == stat.UpgradeInfo &&
-                   this.CustomFormatting == stat.CustomFormatting &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MinValue, stat.MinValue) &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MaxValue, stat.MaxValue);
         }
@@ -304,7 +298,6 @@ namespace HexTecGames.UpgradeSystem
                    EqualityComparer<StatType>.Default.Equals(this.StatType, other.StatType) &&
                    this.Value == other.Value &&
                    this.UpgradeInfo == other.UpgradeInfo &&
-                   this.CustomFormatting == other.CustomFormatting &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MinValue, other.MinValue) &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MaxValue, other.MaxValue);
         }
@@ -314,7 +307,6 @@ namespace HexTecGames.UpgradeSystem
             hash.Add(this.StatType);
             hash.Add(this.Value);
             hash.Add(this.UpgradeInfo);
-            hash.Add(this.CustomFormatting);
             hash.Add(this.MinValue);
             hash.Add(this.MaxValue);
             return hash.ToHashCode();

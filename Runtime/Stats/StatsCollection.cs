@@ -12,7 +12,12 @@ namespace HexTecGames.UpgradeSystem
 
         public Stat Find(StatType type)
         {
-            return stats.Find(type);
+            Stat stat = stats.Find(type);
+            if (stat == null)
+            {
+                Debug.Log("Could not find stat of type: " + type);
+            }
+            return stat;
         }
 
         protected abstract StatsCollection InstantiateCopy();
@@ -74,6 +79,10 @@ namespace HexTecGames.UpgradeSystem
         public List<Upgrade> GetValidUpgrades(Rarity rarity)
         {
             List<Upgrade> upgrades = new List<Upgrade>();
+            if (stats == null)
+            {
+                return upgrades;
+            }
             foreach (var stat in stats)
             {
                 Upgrade upgrade = stat.GetUpgrade(rarity, stats);
@@ -86,7 +95,6 @@ namespace HexTecGames.UpgradeSystem
             {
                 if (upgrades[i] == null)
                 {
-                    Debug.Log("huh?");
                     upgrades.RemoveAt(i);
                 }
             }

@@ -22,11 +22,8 @@ namespace HexTecGames.UpgradeSystem
                 increase = value;
             }
         }
-        [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.None, reverse: true)] 
-        private int increase;
-
         [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.None, reverse: true)]
-        private Rarity minRarity;
+        private int increase;
 
         public int TotalTickets
         {
@@ -39,7 +36,7 @@ namespace HexTecGames.UpgradeSystem
                 tickets = value;
             }
         }
-        [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.None, reverse: true)] 
+        [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.None, reverse: true)]
         private int tickets = 100;
         [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.None, reverse: true)]
         [SubclassSelector, SerializeReference] private Condition condition;
@@ -63,7 +60,6 @@ namespace HexTecGames.UpgradeSystem
             UpgradeInfo clone = new UpgradeInfo();
             clone.upgradeType = this.upgradeType;
             clone.Increase = this.Increase;
-            clone.minRarity = this.minRarity;
             clone.TotalTickets = this.TotalTickets;
             clone.condition = this.condition.CreateCopy();
             return clone;
@@ -93,28 +89,19 @@ namespace HexTecGames.UpgradeSystem
             }
             if (upgradeType == UpgradeType.RarityIncrease)
             {
-                Rarity currentMinRarity = GetCurrentMinRarity(rarity);
+                //Rarity currentMinRarity = GetCurrentMinRarity(rarity);
                 //Legendary = 3
                 //Rare = 1;
                 //TotalIndexes = 2;
                 //Result: Increase by: IncreaseValue * 2
 
-                int difference = rarity.GetIndex() - currentMinRarity.GetIndex();
+                //int difference = rarity.GetIndex() - currentMinRarity.GetIndex();
 
-                return increase * difference;
+                return increase * 1;
             }
             else return increase;
         }
-        private Rarity GetCurrentMinRarity(Rarity rarity)
-        {
-            Rarity currentMinRarity;
-            if (minRarity == null)
-            {
-                currentMinRarity = rarity.GetRarityByIndex(0);
-            }
-            else currentMinRarity = minRarity.GetRarity(TotalUpgrades);
-            return currentMinRarity;
-        }
+
         public Upgrade GetUpgrade(Stat stat, Rarity rarity, List<Stat> allStats)
         {
             if (!IsAllowedUpgrade(stat, rarity, allStats))
@@ -122,15 +109,11 @@ namespace HexTecGames.UpgradeSystem
                 Debug.Log("in here");
                 return null;
             }
-            else return new Upgrade(this, stat, rarity, TotalTickets);
+            else return new StatUpgrade(this, stat, rarity, TotalTickets);
         }
         public bool IsAllowedUpgrade(Stat stat, Rarity rarity, List<Stat> allStats)
         {
-            if (minRarity != null && minRarity.GetIndex() > rarity.GetIndex())
-            {
-                return false;               
-            }
-            if (!IsValidType(rarity))
+            if (upgradeType == UpgradeType.None)
             {
                 return false;
             }
@@ -153,26 +136,10 @@ namespace HexTecGames.UpgradeSystem
 
             return condition.IsValid(stat, rarity, allStats);
         }
-        private bool IsValidType(Rarity rarity)
-        {
-            if (upgradeType == UpgradeType.Flat)
-            {
-                return true;
-            }
-            else
-            {
-                Rarity currentMinRarity = GetCurrentMinRarity(rarity);
 
-                if (currentMinRarity.GetIndex() > rarity.GetIndex())
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
         public string GetMainDescription(Stat stat, Rarity rarity)
         {
-            return $"{stat.StatType.name}{Environment.NewLine}+{CalculateUpgradeIncrease(stat, rarity).ToString(stat.GetFormatting())}";
+            return $"{stat.StatType.name}{Environment.NewLine}+{CalculateUpgradeIncrease(stat, rarity).ToString(stat.StatType.Formatting)}";
         }
         public string GetBonusDescription(Stat stat, Rarity rarity)
         {
