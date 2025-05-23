@@ -7,28 +7,47 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public class StatUpgrade : Upgrade
     {
-        public Stat stat;
-        
-        private UpgradeInfo upgradeInfo;
-
-        public StatUpgrade(UpgradeInfo upgradeInfo, Stat stat, Rarity rarity, int tickets) : base(rarity, tickets)
+        public Stat Stat
         {
-            this.upgradeInfo = upgradeInfo;
-            this.stat = stat;
+            get
+            {
+                return this.stat;
+            }
+            private set
+            {
+                this.stat = value;
+            }
+        }
+        private Stat stat;
+
+        private float efficiency;
+
+        public UpgradeInfo UpgradeInfo
+        {
+            get
+            {
+                return Stat.UpgradeInfo;
+            }
+        }
+
+        public StatUpgrade(Stat stat, Rarity rarity, int tickets, float efficiency) : base(rarity, tickets)
+        {
+            this.Stat = stat;
+            this.efficiency = efficiency;
         }
 
         public override string GetDescription()
         {
-            return upgradeInfo.GetMainDescription(stat, rarity);
+            return UpgradeInfo.GetMainDescription(Stat, rarity);
         }
         public override string GetExtraDescription()
         {
-            return upgradeInfo.GetBonusDescription(stat, rarity);
+            return UpgradeInfo.GetBonusDescription(Stat, rarity);
         }
 
         public override void Apply()
         {
-            stat.Upgrade(rarity);
+            Stat.Upgrade(rarity, efficiency);
         }
     }
 }

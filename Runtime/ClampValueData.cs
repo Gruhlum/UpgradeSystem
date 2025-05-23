@@ -7,19 +7,19 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public class ClampValueData
     {
-        public StatClamp clampType;
+        public StatClamp clampType = StatClamp.None;
         //[DrawIf(nameof(clampType), StatClamp.Value)] 
         public int value;
         //[DrawIf(nameof(clampType), StatClamp.Stat)] 
         public StatType statType;
 
-        public ClampValueData(StatClamp clampType)
+        public ClampValueData()
         {
-            this.clampType = clampType;
         }
-        public ClampValueData(StatClamp clampType, int value) : this(clampType)
+        public ClampValueData(int value)
         {
             this.value = value;
+            clampType = StatClamp.Value;
         }
         public ClampValue GenerateClampValue(ClampType type, List<Stat> allStats)
         {
@@ -39,7 +39,8 @@ namespace HexTecGames.UpgradeSystem
 
         public ClampValueData CreateCopy()
         {
-            ClampValueData clone = new ClampValueData(clampType);
+            ClampValueData clone = new ClampValueData();
+            clone.clampType = clampType;
             clone.value = value;
             clone.statType = statType;
             return clone;

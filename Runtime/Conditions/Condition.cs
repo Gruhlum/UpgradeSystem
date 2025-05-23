@@ -7,6 +7,8 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public abstract class Condition
     {
+       
+
         public abstract bool IsValid(Stat stat, Rarity rarity, List<Stat> allStats);
 
         protected bool EquateSymbol(EquationSymbol symbol, int value1, int value2)

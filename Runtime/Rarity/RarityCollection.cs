@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
-    [CreateAssetMenu(menuName = "HexTecGames/Default Project Universal 2D/RarityCollection")]
+    [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/RarityCollection")]
     public class RarityCollection : ScriptableObject
     {
         [SerializeField] private List<Rarity> rarities = default;

@@ -47,5 +47,46 @@ namespace HexTecGames.UpgradeSystem
         {
             return rarityCollection.GetRarity(this, change);
         }
+
+        public int GetMultiplier(Rarity other)
+        {
+            int difference = this.GetIndex() - other.GetIndex();
+            return GetMultiplier(difference);
+        }
+        public int GetMultiplier()
+        {
+            return GetMultiplier(GetIndex());
+        }
+        private int GetMultiplier(int value)
+        {
+            return Mathf.RoundToInt(Mathf.Pow(2, value));
+        }
+        public static bool operator >(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() > r2.GetIndex();
+        }
+
+        public static bool operator <(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() < r2.GetIndex();
+        }
+
+        public static bool operator >=(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() >= r2.GetIndex();
+        }
+
+        public static bool operator <=(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() <= r2.GetIndex();
+        }
+        public static int operator -(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() - r2.GetIndex();
+        }
+        public static int operator +(Rarity r1, Rarity r2)
+        {
+            return r1.GetIndex() + r2.GetIndex();
+        }
     }
 }

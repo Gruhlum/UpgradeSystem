@@ -25,7 +25,7 @@ namespace HexTecGames.UpgradeSystem
             stat.OnValueChanged += Stat_OnValueChanged;
         }
 
-        public void ValidateData(StatsCollection statsCollection)
+        public void ValidateData(StatCollection statsCollection)
         {
             if (stat == null || stat.StatType != statType)
             {

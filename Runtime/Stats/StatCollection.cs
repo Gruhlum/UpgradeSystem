@@ -1,34 +1,59 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using HexTecGames.UpgradeSystem;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
-    public abstract class StatsCollection : IEnumerable<Stat>
+    public abstract class StatCollection : IEnumerable<Stat>
     {
+        public CollectionType CollectionType
+        {
+            get
+            {
+                return collectionType;
+            }
+            protected set
+            {
+                collectionType = value;
+            }
+        }
+        [SerializeField] private CollectionType collectionType;
+
         protected List<Stat> stats;
+
+        public event Action<Stat, Rarity, float> OnStatUpgraded;
+
+        public int GetTotalTickets(Rarity rarity)
+        {
+            int total = 0;
+            foreach (var stat in stats)
+            {
+                if (stat.IsValidUpgrade(rarity))
+                {
+                    total += stat.UpgradeInfo.Tickets;
+                }
+            }
+            return total;
+        }
 
         public Stat Find(StatType type)
         {
             Stat stat = stats.Find(type);
             if (stat == null)
             {
+                if (stats.Any(x => x.StatType.name == "Experience"))
+                {
+                    Debug.Log("Is virus");
+                }
+                else Debug.Log("Is player");
+
                 Debug.Log("Could not find stat of type: " + type);
             }
             return stat;
         }
-
-        protected abstract StatsCollection InstantiateCopy();
-        public StatsCollection CreateCopy()
-        {
-            StatsCollection clone = InstantiateCopy();
-            CopyStats(clone);
-            return clone;
-        }
-
-        protected abstract void CopyStats(StatsCollection clone);
 
         protected virtual void InitializeData() { }
         public void Initialize()
@@ -36,6 +61,7 @@ namespace HexTecGames.UpgradeSystem
             stats = GenerateStatList();
             InitStats();
             InitializeData();
+            AddEvents();
         }
         private void InitStats()
         {
@@ -47,6 +73,18 @@ namespace HexTecGames.UpgradeSystem
                 }
                 stat.Initialize(stats);
             }
+        }
+        private void AddEvents()
+        {
+            foreach (var stat in stats)
+            {
+                stat.OnUpgraded += Stat_OnUpgraded;
+            }
+        }
+
+        private void Stat_OnUpgraded(Stat stat, Rarity rarity, float efficiency)
+        {
+            OnStatUpgraded?.Invoke(stat, rarity, efficiency);
         }
         protected List<Stat> GenerateStatList()
         {
@@ -76,31 +114,6 @@ namespace HexTecGames.UpgradeSystem
         }
         protected abstract void AddStatsToList(List<Stat> stats);
 
-        public List<Upgrade> GetValidUpgrades(Rarity rarity)
-        {
-            List<Upgrade> upgrades = new List<Upgrade>();
-            if (stats == null)
-            {
-                return upgrades;
-            }
-            foreach (var stat in stats)
-            {
-                Upgrade upgrade = stat.GetUpgrade(rarity, stats);
-                if (upgrade != null)
-                {
-                    upgrades.Add(upgrade);
-                }
-            }
-            for (int i = upgrades.Count - 1; i >= 0; i--)
-            {
-                if (upgrades[i] == null)
-                {
-                    upgrades.RemoveAt(i);
-                }
-            }
-            return upgrades;
-        }
-
         public IEnumerator<Stat> GetEnumerator()
         {
             return stats.GetEnumerator();
@@ -110,5 +123,7 @@ namespace HexTecGames.UpgradeSystem
         {
             return this.GetEnumerator();
         }
+
+        
     }
 }

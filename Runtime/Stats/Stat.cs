@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class Stat : IEquatable<Stat>
+    public class Stat : IEquatable<Stat>, IHasUpgrade
     {
         public StatType StatType
         {
@@ -23,19 +23,19 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private StatType statType;
 
-        public virtual int FlatValue
+        public int FlatValue
         {
-            get
-            {
-                return this.flatValue;
-            }
             set
             {
-                this.flatValue = value;
+                flatValue = value;
                 UpdateValue();
             }
+            get
+            {
+                return flatValue;
+            }
         }
-        [SerializeField] private int flatValue;
+        [SerializeField] private int flatValue = default;
 
         [SerializeField] private ClampValueData minValueData;
         [SerializeField] private ClampValueData maxValueData;
@@ -46,7 +46,6 @@ namespace HexTecGames.UpgradeSystem
             {
                 return this.upgradeInfo;
             }
-
             set
             {
                 this.upgradeInfo = value;
@@ -97,13 +96,16 @@ namespace HexTecGames.UpgradeSystem
 
 
         public event Action<Stat, int> OnValueChanged;
+        public event Action<Stat, Rarity, float> OnUpgraded;
 
 
         public Stat(StatType statType)
         {
             this.StatType = statType;
+            UpgradeInfo = new UpgradeInfo();
+            minValueData = new ClampValueData();
+            maxValueData = new ClampValueData();
         }
-
 
         public Stat CreateCopy()
         {
@@ -136,6 +138,7 @@ namespace HexTecGames.UpgradeSystem
             multiplier.OnRemoved += Multiplier_OnRemoved;
             multiplier.OnValueChanged += Multiplier_OnValueChanged;
             multipliers.Add(multiplier);
+            int oldValue = Value;
             UpdateValue();
         }
 
@@ -162,7 +165,7 @@ namespace HexTecGames.UpgradeSystem
         {
             int result = FlatValue;
             result = MultiplyFlatValue(result);
-            result = ClampValue(result);
+            //result = ClampValue(result);
             return result;
         }
 
@@ -176,13 +179,13 @@ namespace HexTecGames.UpgradeSystem
                 return baseValue;
             }
 
-            float multi = 1 + multipliers[0].Value / 100f;
-            for (int i = 1; i < multipliers.Count; i++)
+            float multi = 1;
+            for (int i = 0; i < multipliers.Count; i++)
             {
-                multi *= multipliers[i].Value / 100f; // 4.14
+                multi *= 1 + multipliers[i].Value / 100f; // 4.14
             }
 
-            return baseValue += Mathf.RoundToInt(baseValue * multi); // 82.8
+            return Mathf.RoundToInt(baseValue * multi); // 82.8
         }
 
         public void Initialize(List<Stat> allStats)
@@ -198,25 +201,32 @@ namespace HexTecGames.UpgradeSystem
             this.Value = startValue;
             this.UpgradeInfo = upgradeInfo;
         }
-        public bool IsUpgradeable(Rarity rarity, List<Stat> allStats)
+
+        public bool CanBeMultiUpgrade(Rarity rarity)
+        {
+            if (!IsValidUpgrade(rarity))
+            {
+                return false;
+            }
+            else return UpgradeInfo.GetBeMultiUpgrade();
+        }
+
+        public bool IsValidUpgrade(Rarity rarity)
         {
             if (upgradeInfo == null)
             {
                 return false;
             }
-            return upgradeInfo.IsAllowedUpgrade(this, rarity, allStats);
+            return upgradeInfo.IsValidUpgrade(this, rarity);
         }
-        public Upgrade GetUpgrade(Rarity rarity, List<Stat> allStats)
+        public Upgrade GetUpgrade(Rarity rarity)
         {
-            if (!IsUpgradeable(rarity, allStats))
-            {
-                return null;
-            }
-            return upgradeInfo.GetUpgrade(this, rarity, allStats);
+            return upgradeInfo.GetUpgrade(this, rarity);
         }
-        public void Upgrade(Rarity rarity)
+        public void Upgrade(Rarity rarity, float efficiency)
         {
-            upgradeInfo.ApplyUpgrade(this, rarity);
+            upgradeInfo.ApplyUpgrade(this, rarity, efficiency);
+            OnUpgraded?.Invoke(this, rarity, efficiency);
         }
         public override string ToString()
         {
@@ -361,39 +371,6 @@ namespace HexTecGames.UpgradeSystem
             return a / value;
         }
 
-        public static bool operator >(Stat a, int value)
-        {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value > value;
-        }
-        public static bool operator >(int value, Stat a)
-        {
-            if (a == null)
-            {
-                return false;
-            }
-            return value > a.Value;
-        }
-        public static bool operator <(Stat a, int value)
-        {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value < value;
-        }
-        public static bool operator <(int value, Stat a)
-        {
-            if (a == null)
-            {
-                return false;
-            }
-            return value < a.Value;
-        }
-
         public static float operator +(Stat a, float value)
         {
             if (a == null)
@@ -441,6 +418,39 @@ namespace HexTecGames.UpgradeSystem
         public static float operator /(float value, Stat a)
         {
             return a / value;
+        }
+
+        public static bool operator >(Stat a, int value)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return a.Value > value;
+        }
+        public static bool operator >(int value, Stat a)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return value > a.Value;
+        }
+        public static bool operator <(Stat a, int value)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return a.Value < value;
+        }
+        public static bool operator <(int value, Stat a)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return value < a.Value;
         }
         public static bool operator >(Stat a, float value)
         {
@@ -508,6 +518,39 @@ namespace HexTecGames.UpgradeSystem
             return value <= a.Value;
         }
 
+        public static bool operator >=(Stat a, float value)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return a.Value >= value;
+        }
+        public static bool operator >=(float value, Stat a)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return value >= a.Value;
+        }
+        public static bool operator <=(Stat a, float value)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return a.Value <= value;
+        }
+        public static bool operator <=(float value, Stat a)
+        {
+            if (a == null)
+            {
+                return false;
+            }
+            return value <= a.Value;
+        }
+
         public static bool operator ==(Stat a, int value)
         {
             if (a == null)
@@ -524,7 +567,6 @@ namespace HexTecGames.UpgradeSystem
             }
             return value == a.Value;
         }
-
         public static bool operator !=(Stat a, int value)
         {
             if (a == null)
@@ -541,6 +583,7 @@ namespace HexTecGames.UpgradeSystem
             }
             return value != a.Value;
         }
+
         public static int operator +(Stat a, Stat b)
         {
             if (a != null && b != null)
