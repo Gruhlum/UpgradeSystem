@@ -9,22 +9,19 @@ namespace HexTecGames.UpgradeSystem
     {
         [SerializeField] private int maximumUpgrades = 1;
 
-        public override bool IsValid(Stat stat, Rarity rarity, List<Stat> allStats)
+        public TotalCondition(int maximumUpgrades)
+        {
+            this.maximumUpgrades = maximumUpgrades;
+        }
+
+        public override Condition Create(List<Stat> allStats)
+        {
+            return new TotalCondition(maximumUpgrades);
+        }
+
+        public override bool IsValid(Stat stat, Rarity rarity)
         {
             return maximumUpgrades > stat.UpgradeInfo.TotalUpgrades;
-        }
-
-        protected override void CopyTo(Condition condition)
-        {
-            if (condition is TotalCondition totalCondition)
-            {
-                totalCondition.maximumUpgrades = maximumUpgrades;
-            }
-        }
-
-        protected override Condition InstantiateCondition()
-        {
-            return new TotalCondition();
         }
     }
 }

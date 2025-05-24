@@ -10,7 +10,7 @@ namespace HexTecGames.UpgradeSystem
     public class UpgradeInfo
     {
         [SerializeField] private UpgradeType upgradeType;
-
+        [SerializeField, DrawIf(nameof(upgradeType), UpgradeType.RarityIncrease)] private StatType multiStatType = default;
         public Rarity Rarity
         {
             get
@@ -72,23 +72,42 @@ namespace HexTecGames.UpgradeSystem
             {
                 return this.upgradeType;
             }
-
             set
             {
                 this.upgradeType = value;
             }
         }
 
+        private Stat multiUpgradeStat;
         private int totalUpgrades;
 
 
-        public UpgradeInfo CreateCopy()
+        public UpgradeInfo Create(Stat stat, List<Stat> allStats)
         {
+            if (multiStatType == null && upgradeType == UpgradeType.RarityIncrease)
+            {
+                Debug.Log("No MultiStatType: " + stat.StatType);
+            }
+            if (this.Rarity == null && upgradeType == UpgradeType.RarityIncrease)
+            {
+                Debug.Log("No Rarity: " + stat.StatType);
+            }
+
             UpgradeInfo clone = new UpgradeInfo();
             clone.UpgradeType = this.UpgradeType;
+            clone.Rarity = this.Rarity;
             clone.Increase = this.Increase;
             clone.Tickets = this.Tickets;
-            clone.condition = this.condition.CreateCopy();
+            clone.multiStatType = this.multiStatType;
+           
+            if (multiStatType != null)
+            {
+                clone.multiUpgradeStat = allStats.Find(multiStatType);
+            }
+            if (this.condition != null)
+            {
+                clone.condition = this.condition.Create(allStats);
+            }
             return clone;
         }
         public void ApplyUpgrade(Stat stat, Rarity rarity, float efficiency)
@@ -137,26 +156,16 @@ namespace HexTecGames.UpgradeSystem
             if (upgradeType == UpgradeType.RarityIncrease)
             {
                 int rarityDifference = this.Rarity.GetRarity(TotalUpgrades) - rarity;
-                
+
                 if (rarityDifference == 0)
                 {
                     return upgrade;
                 }
-                //else
-                //{
-                //    List<TicketItem<Stat>> possibleUpgrades = new List<TicketItem<Stat>>();
-                //    foreach (var allStat in allStats)
-                //    {
-                //        if (allStat.CanBeMultiUpgrade(rarity, allStats))
-                //        {
-                //            possibleUpgrades.Add(new TicketItem<Stat>(allStat.UpgradeInfo.Tickets, allStat));
-                //        }
-                //    }
-                //    TicketItem<Stat> result = ITicket.Roll(possibleUpgrades);
-                //    StatUpgrade secondUpgrade = new StatUpgrade(result.Item, rarity, result.Tickets, 1);
-                //    return new MultiStatUpgrade(new List<StatUpgrade>() { upgrade, secondUpgrade }, rarity);
-                //} 
-                return upgrade;
+                else
+                {
+                    StatUpgrade secondUpgrade = (StatUpgrade)multiUpgradeStat.GetUpgrade(rarity.GetRarityByIndex(0));
+                    return new MultiStatUpgrade(new List<StatUpgrade>() { upgrade, secondUpgrade }, rarity, Tickets);
+                }
             }
             else return upgrade;
         }
@@ -178,20 +187,11 @@ namespace HexTecGames.UpgradeSystem
             {
                 return false;
             }
-            if (!IsValidCondition(stat, rarity))
+            if (condition != null && !condition.IsValid(stat, rarity))
             {
                 return false;
             }
             return true;
-        }
-        private bool IsValidCondition(Stat stat, Rarity rarity)
-        {
-            if (condition == null)
-            {
-                return true;
-            }
-            return true;
-            //return condition.IsValid(stat, rarity);
         }
 
         public string GetMainDescription(Stat stat, Rarity rarity)

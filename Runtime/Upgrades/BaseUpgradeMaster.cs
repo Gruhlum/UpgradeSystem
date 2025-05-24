@@ -8,6 +8,20 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public abstract class BaseUpgradeMaster : ITicket
     {
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            private set
+            {
+                name = value;
+            }
+        }
+        private string name;
+
+
         public int Tickets
         {
             get
@@ -23,8 +37,9 @@ namespace HexTecGames.UpgradeSystem
 
         private List<Upgrade> upgrades = new List<Upgrade>();
 
-        protected BaseUpgradeMaster(int tickets)
+        protected BaseUpgradeMaster(string name, int tickets)
         {
+            this.Name = name;
             this.Tickets = tickets;
         }
 

@@ -10,7 +10,7 @@ namespace HexTecGames.UpgradeSystem
     {
         private List<StatUpgrade> statUpgrades = new List<StatUpgrade>();
 
-        public MultiStatUpgrade(List<StatUpgrade> statUpgrades, Rarity rarity) : base(rarity, 0)
+        public MultiStatUpgrade(List<StatUpgrade> statUpgrades, Rarity rarity, int tickets) : base(rarity, tickets)
         {
             this.statUpgrades = statUpgrades;
         }

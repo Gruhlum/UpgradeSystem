@@ -7,9 +7,7 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public abstract class Condition
     {
-       
-
-        public abstract bool IsValid(Stat stat, Rarity rarity, List<Stat> allStats);
+        public abstract bool IsValid(Stat stat, Rarity rarity);
 
         protected bool EquateSymbol(EquationSymbol symbol, int value1, int value2)
         {
@@ -27,14 +25,6 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        public Condition CreateCopy()
-        {
-            Condition clone = InstantiateCondition();
-            CopyTo(clone);
-            return clone;
-        }
-        protected abstract void CopyTo(Condition condition);
-
-        protected abstract Condition InstantiateCondition();
+        public abstract Condition Create(List<Stat> allStats);
     }
 }

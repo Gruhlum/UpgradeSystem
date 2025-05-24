@@ -10,13 +10,18 @@ namespace HexTecGames.UpgradeSystem
         [SerializeField] private ConditionType conditionType = default;
         [SubclassSelector, SerializeReference] private List<Condition> conditions = default;
 
-        public override bool IsValid(Stat stat, Rarity rarity, List<Stat> allStats)
+        public GroupCondition(List<Condition> conditions)
+        {
+            this.conditions = conditions;
+        }
+
+        public override bool IsValid(Stat stat, Rarity rarity)
         {
             if (conditionType == ConditionType.Any)
             {
                 foreach (var condition in conditions)
                 {
-                    if (condition.IsValid(stat, rarity, allStats))
+                    if (condition.IsValid(stat, rarity))
                     {
                         return true;
                     }
@@ -27,7 +32,7 @@ namespace HexTecGames.UpgradeSystem
             {
                 foreach (var condition in conditions)
                 {
-                    if (!condition.IsValid(stat, rarity, allStats))
+                    if (!condition.IsValid(stat, rarity))
                     {
                         return false;
                     }
@@ -36,28 +41,14 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        protected override void CopyTo(Condition condition)
+        public override Condition Create(List<Stat> allStats)
         {
-            if (condition is GroupCondition groupCondition)
-            {
-                groupCondition.conditionType = conditionType;
-                groupCondition.conditions = CopyConditions();
-            }
-        }
-
-        private List<Condition> CopyConditions()
-        {
-            List<Condition> conditions = new List<Condition>();
+            List<Condition> conditionCopies = new List<Condition>();
             foreach (var condition in conditions)
             {
-                conditions.Add(condition.CreateCopy());
+                conditionCopies.Add(condition.Create(allStats));
             }
-            return conditions;
-        }
-
-        protected override Condition InstantiateCondition()
-        {
-            return new GroupCondition();
+            return new GroupCondition(conditionCopies);
         }
     }
 }

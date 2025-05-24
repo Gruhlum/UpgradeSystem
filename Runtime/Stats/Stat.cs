@@ -192,6 +192,7 @@ namespace HexTecGames.UpgradeSystem
         {
             MinValue = minValueData.GenerateClampValue(ClampType.Min, allStats);
             MaxValue = maxValueData.GenerateClampValue(ClampType.Max, allStats);
+            UpgradeInfo = UpgradeInfo.Create(this, allStats);
             multipliers = new List<ValueChange>();
             UpdateValue();
         }
@@ -217,10 +218,19 @@ namespace HexTecGames.UpgradeSystem
             {
                 return false;
             }
-            return upgradeInfo.IsValidUpgrade(this, rarity);
+            bool valid = upgradeInfo.IsValidUpgrade(this, rarity);
+            if (StatType.name == "Range")
+            {
+                Debug.Log("here 5 " + valid);
+            }
+            return valid;
         }
         public Upgrade GetUpgrade(Rarity rarity)
         {
+            if (StatType.name == "Range")
+            {
+                Debug.Log("here 3");
+            }
             return upgradeInfo.GetUpgrade(this, rarity);
         }
         public void Upgrade(Rarity rarity, float efficiency)

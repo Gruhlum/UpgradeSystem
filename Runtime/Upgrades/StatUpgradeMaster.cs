@@ -7,7 +7,7 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public class StatUpgradeMaster : UpgradeMaster<Stat>
     {
-        public StatUpgradeMaster(List<Stat> hasUpgrades, int tickets) : base(hasUpgrades, tickets)
+        public StatUpgradeMaster(string name, int tickets, List<Stat> hasUpgrades) : base(name, tickets, hasUpgrades)
         {
         }
     }

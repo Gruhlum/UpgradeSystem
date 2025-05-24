@@ -11,25 +11,26 @@ namespace HexTecGames.UpgradeSystem
         [SerializeField] private EquationSymbol symbol = default;
         [SerializeField] private int compareValue = default;
 
-        public override bool IsValid(Stat stat, Rarity rarity, List<Stat> allStats)
+        private Stat linkedStat;
+
+
+        public StatCondition(StatType statType, EquationSymbol symbol, int compareValue, Stat linkedStat)
         {
-            Stat otherStat = allStats.Find(statType);
-            return EquateSymbol(symbol, otherStat.Value, compareValue);
+            this.statType = statType;
+            this.symbol = symbol;
+            this.compareValue = compareValue;
+            this.linkedStat = linkedStat;
         }
 
-        protected override void CopyTo(Condition condition)
+        public override Condition Create(List<Stat> allStats)
         {
-            if (condition is StatCondition statCondition)
-            {
-                statCondition.statType = statType;
-                statCondition.symbol = symbol;
-                statCondition.compareValue = compareValue;
-            }
+            Stat linkedStat = allStats.Find(statType);
+            return new StatCondition(statType, symbol, compareValue, linkedStat);
         }
 
-        protected override Condition InstantiateCondition()
+        public override bool IsValid(Stat stat, Rarity rarity)
         {
-            return new StatCondition();
+            return EquateSymbol(symbol, linkedStat.Value, compareValue);
         }
     }
 }

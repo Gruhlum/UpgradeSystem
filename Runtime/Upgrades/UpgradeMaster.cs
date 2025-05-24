@@ -10,8 +10,7 @@ namespace HexTecGames
     {
         protected List<T> hasUpgrades;
 
-
-        public UpgradeMaster(List<T> hasUpgrades, int tickets) : base(tickets)
+        public UpgradeMaster(string name, int tickets, List<T> hasUpgrades) : base(name, tickets)
         {
             this.hasUpgrades = hasUpgrades;
         }
