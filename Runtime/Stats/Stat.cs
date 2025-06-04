@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class Stat : IEquatable<Stat>, IHasUpgrade
+    public class Stat : IEquatable<Stat>, ITicket
     {
         public StatType StatType
         {
@@ -90,15 +90,29 @@ namespace HexTecGames.UpgradeSystem
                 maxValue = value;
             }
         }
+
+        public int Tickets
+        {
+            get
+            {
+                return UpgradeInfo.Tickets;
+            }
+        }
+
         private ClampValue maxValue;
 
         private List<ValueChange> multipliers = new List<ValueChange>();
 
 
+        private int increasePerLevelUp;
+
+
         public event Action<Stat, int> OnValueChanged;
-        public event Action<Stat, Rarity, float> OnUpgraded;
+        public event Action<Stat, int> OnUpgraded;
 
 
+        public Stat()
+        { }
         public Stat(StatType statType)
         {
             this.StatType = statType;
@@ -131,6 +145,22 @@ namespace HexTecGames.UpgradeSystem
         protected virtual void CopyTo(Stat stat)
         {
             stat.CopyFrom(this);
+        }
+
+        public void AddLevelUpValue(int value)
+        {
+            increasePerLevelUp += value;
+        }
+
+        public void LevelUp()
+        {
+            if (increasePerLevelUp <= 0)
+            {
+                return;
+            }
+            Debug.Log($"Increasing {statType.name} by {increasePerLevelUp}");
+            FlatValue += increasePerLevelUp;
+            OnUpgraded?.Invoke(this, increasePerLevelUp);
         }
 
         public void AddMultiplier(ValueChange multiplier)
@@ -203,13 +233,13 @@ namespace HexTecGames.UpgradeSystem
             this.UpgradeInfo = upgradeInfo;
         }
 
-        public bool CanBeMultiUpgrade(Rarity rarity)
+        public bool CanBeSpecialUpgrade(Rarity rarity, float efficiency)
         {
             if (!IsValidUpgrade(rarity))
             {
                 return false;
             }
-            else return UpgradeInfo.GetBeMultiUpgrade();
+            else return UpgradeInfo.CanBeSpecialUpgrade(this, rarity, efficiency);
         }
 
         public bool IsValidUpgrade(Rarity rarity)
@@ -219,24 +249,16 @@ namespace HexTecGames.UpgradeSystem
                 return false;
             }
             bool valid = upgradeInfo.IsValidUpgrade(this, rarity);
-            if (StatType.name == "Range")
-            {
-                Debug.Log("here 5 " + valid);
-            }
             return valid;
         }
-        public Upgrade GetUpgrade(Rarity rarity)
+        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency efficiency)
         {
-            if (StatType.name == "Range")
-            {
-                Debug.Log("here 3");
-            }
-            return upgradeInfo.GetUpgrade(this, rarity);
+            return upgradeInfo.GetUpgrade(this, efficiency, rarity);
         }
         public void Upgrade(Rarity rarity, float efficiency)
         {
-            upgradeInfo.ApplyUpgrade(this, rarity, efficiency);
-            OnUpgraded?.Invoke(this, rarity, efficiency);
+            int increase = upgradeInfo.ApplyUpgrade(this, rarity, efficiency);
+            OnUpgraded?.Invoke(this, increase);
         }
         public override string ToString()
         {

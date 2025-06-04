@@ -6,27 +6,83 @@ using UnityEngine;
 
 namespace HexTecGames
 {
-    public abstract class UpgradeMaster<T> : BaseUpgradeMaster where T : IHasUpgrade
+    public abstract class UpgradeMaster<T> : IUpgradeMaster where T : Upgrade
     {
-        protected List<T> hasUpgrades;
-
-        public UpgradeMaster(string name, int tickets, List<T> hasUpgrades) : base(name, tickets)
+        public string Name
         {
-            this.hasUpgrades = hasUpgrades;
+            get
+            {
+                return name;
+            }
+            private set
+            {
+                name = value;
+            }
+        }
+        private string name;
+        public int Tickets
+        {
+            get
+            {
+                return tickets;
+            }
+            private set
+            {
+                tickets = value;
+            }
         }
 
-        protected override List<Upgrade> GenerateUpgrades(Rarity rarity)
+        public int AvailableUpgrades
         {
-            List<Upgrade> upgrades = new List<Upgrade>();
-
-            foreach (var hasUpgrade in hasUpgrades)
+            get
             {
-                if (hasUpgrade.IsValidUpgrade(rarity))
-                {
-                    upgrades.Add(hasUpgrade.GetUpgrade(rarity));
-                }
+                return upgrades.Count;
             }
-            return upgrades;
+        }
+
+        private int tickets;
+
+        protected List<T> upgrades = new List<T>();
+        protected Rarity currentRarity;
+
+
+        public UpgradeMaster(string name, int tickets)
+        {
+            this.Name = name;
+            this.Tickets = tickets;
+        }
+
+        public virtual Upgrade RollUpgrade()
+        {
+            Upgrade upgrade = ITicket.Roll(upgrades);
+            upgrades.Remove(upgrade as T);
+            return upgrade;
+        }
+        public bool HasUpgrade()
+        {
+            return upgrades != null && upgrades.Count > 0;
+        }
+        public void GenerateUpgrades(Rarity rarity)
+        {
+            ClearUpgrades();
+            currentRarity = rarity;
+
+            upgrades = CreateUpgrades(rarity);
+
+            //foreach (var hasUpgrade in hasUpgrades)
+            //{
+            //    if (hasUpgrade.IsValidUpgrade(rarity))
+            //    {
+            //        upgrades.Add(hasUpgrade.GetUpgrade(rarity));
+            //    }
+            //}
+        }
+
+        protected abstract List<T> CreateUpgrades(Rarity rarity);
+
+        public void ClearUpgrades()
+        {
+            upgrades.Clear();
         }
     }
 }

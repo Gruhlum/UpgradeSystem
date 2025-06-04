@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
+using HexTecGames.Basics.UI;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
@@ -28,7 +29,7 @@ namespace HexTecGames.UpgradeSystem
             this.rarity = rarity;
             this.Tickets = tickets;
         }
-        public abstract string GetDescription();
+        public abstract TableText GetDescription();
 
         public abstract string GetExtraDescription();
 

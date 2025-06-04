@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
+using HexTecGames.Basics.UI;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
     [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/StatType")]
-    public class StatType : ScriptableObject
+    public class StatType : TagType
     {
         [SerializeField] private Sprite icon = default;
 
         [SerializeField] private bool isPercent = default;
         [SerializeField] private string shortName = default;
+        [SerializeField, TextArea] private string description = default;
+        [Space]
         [SerializeField] private bool ignore = default;
         [SerializeField] private List<StatTag> tags = default;
 
@@ -69,6 +72,18 @@ namespace HexTecGames.UpgradeSystem
             set
             {
                 this.ignore = value;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return this.description;
+            }
+            set
+            {
+                this.description = value;
             }
         }
 

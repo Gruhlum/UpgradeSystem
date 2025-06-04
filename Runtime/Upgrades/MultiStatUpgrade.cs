@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using HexTecGames.Basics.UI;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class MultiStatUpgrade : Upgrade
+    public class MultiStatUpgrade : StatUpgrade
     {
-        private List<StatUpgrade> statUpgrades = new List<StatUpgrade>();
+        private List<SingleUpgrade> statUpgrades = new List<SingleUpgrade>();
 
-        public MultiStatUpgrade(List<StatUpgrade> statUpgrades, Rarity rarity, int tickets) : base(rarity, tickets)
+        public MultiStatUpgrade(List<SingleUpgrade> statUpgrades, Rarity rarity, int tickets) : base(statUpgrades[0].Stat, rarity, tickets)
         {
             this.statUpgrades = statUpgrades;
         }
@@ -23,18 +25,19 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        public override string GetDescription()
+        public override TableText GetDescription()
         {
-            List<string> results = new List<string>(statUpgrades.Count);
+            TableText results = new TableText();
 
             foreach (var upgrade in statUpgrades)
             {
-                results.Add(upgrade.GetDescription());
+                results.multiTexts.AddRange(upgrade.GetDescription().multiTexts);
             }
 
-            return string.Join(Environment.NewLine, results);
-        }
+            //results.multiTexts.Sort();
 
+            return results;
+        }
         public override string GetExtraDescription()
         {
             List<string> results = new List<string>(statUpgrades.Count);

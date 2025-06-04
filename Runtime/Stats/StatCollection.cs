@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using HexTecGames.Basics;
 using UnityEngine;
@@ -22,9 +23,16 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private CollectionType collectionType;
 
+        public ReadOnlyCollection<Stat> Stats
+        {
+            get
+            {
+                return stats.AsReadOnly();
+            }
+        }
         protected List<Stat> stats;
 
-        public event Action<Stat, Rarity, float> OnStatUpgraded;
+        public event Action<Stat, int> OnStatUpgraded;
 
         public int GetTotalTickets(Rarity rarity)
         {
@@ -82,24 +90,21 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        private void Stat_OnUpgraded(Stat stat, Rarity rarity, float efficiency)
+        public void LevelUp()
         {
-            OnStatUpgraded?.Invoke(stat, rarity, efficiency);
+            foreach (var stat in stats)
+            {
+                stat.LevelUp();
+            }
+        }
+        private void Stat_OnUpgraded(Stat stat, int increase)
+        {
+            OnStatUpgraded?.Invoke(stat, increase);
         }
         protected List<Stat> GenerateStatList()
         {
             List<Stat> results = new List<Stat>();
             AddStatsToList(results);
-            //List<string> debugs = new List<string>();
-            //foreach (var result in results)
-            //{
-            //    if (result != null)
-            //    {
-            //        debugs.Add(result.StatType.name);
-            //    }
-            //    else debugs.Add("-");
-            //}
-            //Debug.Log(debugs.Count + " - " + string.Join(", ", debugs));
             return results;
         }
         public List<Stat> GetStats()

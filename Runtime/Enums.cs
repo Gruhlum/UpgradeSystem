@@ -10,4 +10,5 @@ namespace HexTecGames.UpgradeSystem
     public enum EquationSymbol { Equal, Greater, Less }
     public enum ConditionType { All, Any }
     public enum FormattingType { None, Percent, Custom }
+    public enum StatUpgradeType { Single, Multi, OverTime }
 }

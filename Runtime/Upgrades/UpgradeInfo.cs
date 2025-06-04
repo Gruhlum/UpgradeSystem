@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HexTecGames.Basics;
+using HexTecGames.Basics.UI;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
@@ -99,7 +101,7 @@ namespace HexTecGames.UpgradeSystem
             clone.Increase = this.Increase;
             clone.Tickets = this.Tickets;
             clone.multiStatType = this.multiStatType;
-           
+
             if (multiStatType != null)
             {
                 clone.multiUpgradeStat = allStats.Find(multiStatType);
@@ -110,22 +112,22 @@ namespace HexTecGames.UpgradeSystem
             }
             return clone;
         }
-        public void ApplyUpgrade(Stat stat, Rarity rarity, float efficiency)
+        public int ApplyUpgrade(Stat stat, Rarity rarity, float efficiency)
         {
             if (UpgradeType == UpgradeType.None)
             {
-                return;
+                return 0;
             }
             TotalUpgrades++;
-            stat.FlatValue += Mathf.RoundToInt(GetUpgradeValue(stat, rarity) * efficiency);
+            int upgradeValue = GetUpgradeValue(stat, rarity, efficiency);
+            stat.FlatValue += upgradeValue;
+            return upgradeValue;
         }
-        public int GetUpgradeValue(Stat stat, Rarity rarity)
+        private int GetUpgradeValue(Stat stat, Rarity rarity)
         {
             if (UpgradeType == UpgradeType.Flat || UpgradeType == UpgradeType.Normal)
             {
-                int multiplier = CalculateMultiplier(stat, rarity);
-
-                return increase * multiplier;
+                return increase;
             }
             if (UpgradeType == UpgradeType.Percent)
             {
@@ -138,20 +140,18 @@ namespace HexTecGames.UpgradeSystem
             }
             else return increase;
         }
-
-        private int CalculateMultiplier(Stat stat, Rarity rarity)
+        public int GetUpgradeValue(Stat stat, Rarity rarity, float efficiency)
         {
-            if (this.Rarity == null)
+            if (upgradeType != UpgradeType.RarityIncrease)
             {
-                Debug.Log("No rarity for Stat: " + stat.StatType.name);
-                return rarity.GetMultiplier(rarity.GetRarityByIndex(0));
+                return Mathf.RoundToInt(GetUpgradeValue(stat, rarity) * efficiency);
             }
-            return rarity.GetMultiplier(this.Rarity);
+            else return Mathf.RoundToInt(GetUpgradeValue(stat, rarity));
         }
 
-        public Upgrade GetUpgrade(Stat stat, Rarity rarity)
+        public StatUpgrade GetUpgrade(Stat stat, Efficiency efficiency, Rarity rarity)
         {
-            StatUpgrade upgrade = new StatUpgrade(stat, rarity, Tickets, 1);
+            SingleUpgrade upgrade = new SingleUpgrade(stat, efficiency, rarity, Tickets);
 
             if (upgradeType == UpgradeType.RarityIncrease)
             {
@@ -163,8 +163,8 @@ namespace HexTecGames.UpgradeSystem
                 }
                 else
                 {
-                    StatUpgrade secondUpgrade = (StatUpgrade)multiUpgradeStat.GetUpgrade(rarity.GetRarityByIndex(0));
-                    return new MultiStatUpgrade(new List<StatUpgrade>() { upgrade, secondUpgrade }, rarity, Tickets);
+                    SingleUpgrade secondUpgrade = multiUpgradeStat.GetUpgrade(rarity.GetRarityByIndex(0), efficiency) as SingleUpgrade;
+                    return new MultiStatUpgrade(new List<SingleUpgrade>() { upgrade, secondUpgrade }, rarity, Tickets);
                 }
             }
             else return upgrade;
@@ -194,18 +194,44 @@ namespace HexTecGames.UpgradeSystem
             return true;
         }
 
-        public string GetMainDescription(Stat stat, Rarity rarity)
+        public TableText GetMainDescription(Stat stat, Rarity rarity, Efficiency efficiency)
         {
-            return $"{stat.StatType.name}{Environment.NewLine}+{GetUpgradeValue(stat, rarity).ToString(stat.StatType.Formatting)}";
+            string statName = $"<link>{stat.StatType.name}</link>"; // Dodge Chance
+            if (stat == null)
+            {
+                Debug.Log("Stat is null!");
+            }
+            else if (stat.StatType == null)
+            {
+                Debug.Log("StatType is null!");
+            }
+
+            string statTooltip = stat.StatType.Description; // Chance to completely avoid an Attack
+            string statValue = $"<link>+{GetUpgradeValue(stat, rarity, efficiency.Total).ToString(stat.StatType.Formatting)}</link>"; // 4%
+
+            SingleText s1 = new SingleText(statName, statTooltip);
+            TextData tableData = new TextData(efficiency.GetTable());
+            SingleText s2 = new SingleText(statValue, tableData);
+
+            return new TableText(new MultiText(s1, s2));
         }
         public string GetBonusDescription(Stat stat, Rarity rarity)
         {
             return string.Empty;
         }
 
-        public bool GetBeMultiUpgrade()
+        public bool CanBeSpecialUpgrade(Stat stat, Rarity rarity, float efficiency)
         {
-            return UpgradeType != UpgradeType.RarityIncrease;
+            if (UpgradeType == UpgradeType.RarityIncrease)
+            {
+                return false;
+            }
+            float upgradeValue = GetUpgradeValue(stat, rarity) * efficiency;
+            if (upgradeValue <= 0.75f)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

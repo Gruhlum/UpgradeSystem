@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
     [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/RarityType")]
-    public class Rarity : ScriptableObject
+    public class Rarity : TagType
     {
         [SerializeField] private RarityCollection rarityCollection = default;
         public Sprite Icon
@@ -48,18 +49,18 @@ namespace HexTecGames.UpgradeSystem
             return rarityCollection.GetRarity(this, change);
         }
 
-        public int GetMultiplier(Rarity other)
+        public float GetMultiplier(Rarity other)
         {
             int difference = this.GetIndex() - other.GetIndex();
             return GetMultiplier(difference);
         }
-        public int GetMultiplier()
+        public float GetMultiplier()
         {
             return GetMultiplier(GetIndex());
         }
-        private int GetMultiplier(int value)
+        private float GetMultiplier(int value)
         {
-            return Mathf.RoundToInt(Mathf.Pow(2, value));
+            return Mathf.Pow(2, value);
         }
         public static bool operator >(Rarity r1, Rarity r2)
         {
