@@ -68,14 +68,6 @@ namespace HexTecGames
             currentRarity = rarity;
 
             upgrades = CreateUpgrades(rarity);
-
-            //foreach (var hasUpgrade in hasUpgrades)
-            //{
-            //    if (hasUpgrade.IsValidUpgrade(rarity))
-            //    {
-            //        upgrades.Add(hasUpgrade.GetUpgrade(rarity));
-            //    }
-            //}
         }
 
         protected abstract List<T> CreateUpgrades(Rarity rarity);

@@ -24,5 +24,14 @@ namespace HexTecGames.UpgradeSystem
         {
             this.Stat = stat;
         }
+
+        public bool CanBeMultiUpgrade(float efficiency)
+        {
+            return Stat.CanBeMultiUpgrade(rarity, efficiency);
+        }
+        public bool CanBeOverTimeUpgrade(float efficiency)
+        {
+            return Stat.CanBeOverTimeUpgrade(rarity, efficiency);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
+using HexTecGames.Basics.UI;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
@@ -233,13 +234,22 @@ namespace HexTecGames.UpgradeSystem
             this.UpgradeInfo = upgradeInfo;
         }
 
-        public bool CanBeSpecialUpgrade(Rarity rarity, float efficiency)
+
+        public bool CanBeMultiUpgrade(Rarity rarity, float efficiency)
         {
             if (!IsValidUpgrade(rarity))
             {
                 return false;
             }
-            else return UpgradeInfo.CanBeSpecialUpgrade(this, rarity, efficiency);
+            else return UpgradeInfo.CanBeMultiUpgrade(this, rarity, efficiency);
+        }
+        public bool CanBeOverTimeUpgrade(Rarity rarity, float efficiency)
+        {
+            if (!IsValidUpgrade(rarity))
+            {
+                return false;
+            }
+            else return UpgradeInfo.CanBeOverTimeUpgrade(this, rarity, efficiency);
         }
 
         public bool IsValidUpgrade(Rarity rarity)
@@ -251,9 +261,9 @@ namespace HexTecGames.UpgradeSystem
             bool valid = upgradeInfo.IsValidUpgrade(this, rarity);
             return valid;
         }
-        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency efficiency)
+        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency singleEfficiency, Efficiency multiEfficiency)
         {
-            return upgradeInfo.GetUpgrade(this, efficiency, rarity);
+            return upgradeInfo.GetUpgrade(this, rarity, singleEfficiency, multiEfficiency);
         }
         public void Upgrade(Rarity rarity, float efficiency)
         {
@@ -352,6 +362,25 @@ namespace HexTecGames.UpgradeSystem
             hash.Add(this.MinValue);
             hash.Add(this.MaxValue);
             return hash.ToHashCode();
+        }
+
+        public TextData GetDescription()
+        {
+            /* Melee Damage +50
+             * Level Up:  +20
+             * 
+             */
+
+            MultiText m1 = new MultiText(StatType.name, "+" + Value.ToString(StatType.Formatting));
+            TableText table = new TableText(m1);
+            if (increasePerLevelUp > 0)
+            {
+                MultiText m2 = new MultiText("Level Up", "+" + increasePerLevelUp.ToString(StatType.Formatting));
+                table.multiTexts.Add(m2);
+            }
+            TextData textData = new TextData();
+            textData.Add(table);
+            return textData;
         }
 
         public static int operator +(Stat a, int value)

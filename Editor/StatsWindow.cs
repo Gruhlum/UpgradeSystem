@@ -91,12 +91,36 @@ namespace HexTecGames
             }
             this.stats = stats.ToArray();
         }
+
+        private void OnDestroy()
+        {
+            DirtyAll();
+        }
+
+        private void DirtyAll()
+        {
+            foreach (var item in playerCollection)
+            {
+                EditorUtility.SetDirty(item);
+            }
+            foreach (var item in enemyCollection)
+            {
+                EditorUtility.SetDirty(item);
+            }
+            Debug.Log("Dirty All");
+        }
+
         private void OnGUI()
         {
             TitleGUI();
             if (_tableView == null)
-                _tableView = CreateTable(playerCollection.First().GetStats());
-
+            {
+                if (stats == null)
+                {
+                    _tableView = CreateTable(playerCollection.First().GetStats());
+                }
+                else _tableView = CreateTable(stats.ToList());
+            }
             _tableView.DrawTableGUI(stats);
         }
         private void TitleGUI()
@@ -108,6 +132,7 @@ namespace HexTecGames
                 if (GUILayout.Button(item.name))
                 {
                     _tableView = CreateTable(item.GetStats());
+                    DirtyAll();
                 }
             }
 
@@ -120,6 +145,7 @@ namespace HexTecGames
                 if (GUILayout.Button(item.name))
                 {
                     _tableView = CreateTable(item.GetStats());
+                    DirtyAll();
                 }
             }
             EditorGUILayout.EndHorizontal();

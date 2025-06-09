@@ -149,9 +149,9 @@ namespace HexTecGames.UpgradeSystem
             else return Mathf.RoundToInt(GetUpgradeValue(stat, rarity));
         }
 
-        public StatUpgrade GetUpgrade(Stat stat, Efficiency efficiency, Rarity rarity)
+        public StatUpgrade GetUpgrade(Stat stat, Rarity rarity, Efficiency singleEfficiency, Efficiency multiEfficiency)
         {
-            SingleUpgrade upgrade = new SingleUpgrade(stat, efficiency, rarity, Tickets);
+            SingleUpgrade upgrade = new SingleUpgrade(stat, singleEfficiency, rarity, Tickets);
 
             if (upgradeType == UpgradeType.RarityIncrease)
             {
@@ -163,7 +163,10 @@ namespace HexTecGames.UpgradeSystem
                 }
                 else
                 {
-                    SingleUpgrade secondUpgrade = multiUpgradeStat.GetUpgrade(rarity.GetRarityByIndex(0), efficiency) as SingleUpgrade;
+                    Rarity targetRarity = rarity.GetRarity(-1);
+                    SingleUpgrade secondUpgrade = multiUpgradeStat.GetUpgrade(targetRarity, singleEfficiency, multiEfficiency) as SingleUpgrade;
+                    upgrade.Efficiency = singleEfficiency;
+                    secondUpgrade.Efficiency = multiEfficiency;
                     return new MultiStatUpgrade(new List<SingleUpgrade>() { upgrade, secondUpgrade }, rarity, Tickets);
                 }
             }
@@ -207,7 +210,9 @@ namespace HexTecGames.UpgradeSystem
             }
 
             string statTooltip = stat.StatType.Description; // Chance to completely avoid an Attack
-            string statValue = $"<link>+{GetUpgradeValue(stat, rarity, efficiency.Total).ToString(stat.StatType.Formatting)}</link>"; // 4%
+            float upgradeValue = GetUpgradeValue(stat, rarity, efficiency.Total);
+            string valuePrefix = upgradeValue > 0 ? "+" : null;
+            string statValue = $"<link>{valuePrefix}{upgradeValue.ToString(stat.StatType.Formatting)}</link>"; // 4%
 
             SingleText s1 = new SingleText(statName, statTooltip);
             TextData tableData = new TextData(efficiency.GetTable());
@@ -220,7 +225,19 @@ namespace HexTecGames.UpgradeSystem
             return string.Empty;
         }
 
-        public bool CanBeSpecialUpgrade(Stat stat, Rarity rarity, float efficiency)
+        public bool CanBeMultiUpgrade(Stat stat, Rarity rarity, float efficiency)
+        {
+            if (UpgradeType != UpgradeType.RarityIncrease)
+            {
+                return true;
+            }
+            if (rarity != this.Rarity.GetRarity(TotalUpgrades))
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanBeOverTimeUpgrade(Stat stat, Rarity rarity, float efficiency)
         {
             if (UpgradeType == UpgradeType.RarityIncrease)
             {

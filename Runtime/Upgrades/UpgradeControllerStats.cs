@@ -140,6 +140,21 @@ namespace HexTecGames.UpgradeSystem
         [SerializeField] private Stat multiChance = new Stat();
 
 
+        public Stat DoubleUpgradeChance
+        {
+            get
+            {
+                return doubleUpgradeChance;
+            }
+            private set
+            {
+                doubleUpgradeChance = value;
+            }
+        }
+        [SerializeField] private Stat doubleUpgradeChance = new Stat();
+
+
+
         public StatUpgradeType RollUpgradeType(bool allowOverTime, bool allowMulti)
         {
             if (allowOverTime && OverTimeChance.Value > Random.Range(0, 100))
@@ -182,6 +197,8 @@ namespace HexTecGames.UpgradeSystem
 
             stats.Add(OverTimeChance);
             stats.Add(MultiChance);
+
+            stats.Add(DoubleUpgradeChance);
         }
 
 

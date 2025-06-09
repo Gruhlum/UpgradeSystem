@@ -25,12 +25,28 @@ namespace HexTecGames.UpgradeSystem
             statCollection.LevelUp();
         }
 
-        public bool HasSpecialUpgrades(Rarity rarity, float efficiency, int totalRequired)
+        public bool HasMultiUpgrade(float efficiency, int totalRequired)
         {
             int count = 0;
-            foreach (var item in statCollection.Stats)
+            foreach (var item in upgrades)
             {
-                if (item.CanBeSpecialUpgrade(rarity, efficiency))
+                if (item.CanBeMultiUpgrade(efficiency))
+                {
+                    count++;
+                    if (count >= totalRequired)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool HasOverTimeUpgrade(float efficiency, int totalRequired)
+        {
+            int count = 0;
+            foreach (var item in upgrades)
+            {
+                if (item.CanBeOverTimeUpgrade(efficiency))
                 {
                     count++;
                     if (count >= totalRequired)
@@ -47,8 +63,8 @@ namespace HexTecGames.UpgradeSystem
             Efficiency overTimeEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.OverTime);
             Efficiency multiEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.Multi);
 
-            bool canBeOverTime = HasSpecialUpgrades(currentRarity, overTimeEfficiency.Total, 1);
-            bool canBeMulti = HasSpecialUpgrades(currentRarity, multiEfficiency.Total, 2);
+            bool canBeOverTime = HasOverTimeUpgrade(overTimeEfficiency.Total, 1);
+            bool canBeMulti = HasMultiUpgrade(multiEfficiency.Total, 2);
 
             StatUpgradeType upgradeType = upgradeStats.RollUpgradeType(canBeOverTime, canBeMulti);
             //Debug.Log($"{nameof(upgradeType)} {upgradeType}");
@@ -67,31 +83,30 @@ namespace HexTecGames.UpgradeSystem
         {
             List<StatUpgrade> upgrades = new List<StatUpgrade>();
 
-            Efficiency efficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Single);
+            Efficiency singleEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Single);
+            Efficiency multiEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Multi);
 
             foreach (var stat in statCollection.Stats)
             {
                 if (stat.IsValidUpgrade(rarity))
                 {
-                    upgrades.Add(stat.GetUpgrade(rarity, efficiency));
+                    upgrades.Add(stat.GetUpgrade(rarity, singleEfficiency, multiEfficiency));
                 }
             }
             return upgrades;
         }
         private OverTimeUpgrade GenerateOverTimeUpgrade(Rarity rarity, Efficiency efficiency)
         {
-            List<StatUpgrade> availableStats = GetPossibleSpecialStats(rarity, efficiency.Total);
+            List<StatUpgrade> availableStats = GetPossibleOverTimeUpgrades(rarity, efficiency.Total);
             StatUpgrade result = ITicket.Roll(availableStats);
             upgrades.Remove(result);
             return new OverTimeUpgrade(result.Stat, rarity, efficiency, 100);
         }
 
-
-
         public MultiStatUpgrade GenerateMultiUpgrade(Rarity rarity, Efficiency efficiency, int totalStats)
         {
             //Debug.Log(rarity + " - " + rarity.name + " " + rarity.GetMultiplier());
-            List<StatUpgrade> availableStats = GetPossibleSpecialStats(rarity, efficiency.Total);
+            List<StatUpgrade> availableStats = GetPossibleMultiUpgrades(rarity, efficiency.Total);
             List<Stat> results = RollMultiStats(totalStats, availableStats);
             List<SingleUpgrade> upgrades = GenerateUpgradesForMultiUpgrade(rarity, efficiency, results);
 
@@ -117,18 +132,35 @@ namespace HexTecGames.UpgradeSystem
                 StatUpgrade result = ITicket.Roll(availableStats);
                 upgrades.Remove(result);
                 availableStats.Remove(result);
+                if (result == null)
+                {
+                    Debug.Log("Result is null! " + Name + " - " + i);
+                }
                 results.Add(result.Stat);
             }
             return results;
         }
 
-        private List<StatUpgrade> GetPossibleSpecialStats(Rarity rarity, float efficiency)
+        private List<StatUpgrade> GetPossibleMultiUpgrades(Rarity rarity, float efficiency)
         {
             List<StatUpgrade> availableStats = new List<StatUpgrade>();
 
             foreach (var upgrade in upgrades)
             {
-                if (upgrade.Stat.CanBeSpecialUpgrade(rarity, efficiency))
+                if (upgrade.Stat.CanBeMultiUpgrade(rarity, efficiency))
+                {
+                    availableStats.Add(upgrade);
+                }
+            }
+            return availableStats;
+        }
+        private List<StatUpgrade> GetPossibleOverTimeUpgrades(Rarity rarity, float efficiency)
+        {
+            List<StatUpgrade> availableStats = new List<StatUpgrade>();
+
+            foreach (var upgrade in upgrades)
+            {
+                if (upgrade.Stat.CanBeOverTimeUpgrade(rarity, efficiency))
                 {
                     availableStats.Add(upgrade);
                 }
