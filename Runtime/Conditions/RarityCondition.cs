@@ -16,7 +16,7 @@ namespace HexTecGames.UpgradeSystem
             this.symbol = symbol;
         }
 
-        public override Condition Create(List<Stat> allStats)
+        public override Condition Create(Dictionary<StatType, Stat> allStats)
         {
             return new RarityCondition(rarity, symbol);
         }

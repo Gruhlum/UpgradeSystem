@@ -25,6 +25,6 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        public abstract Condition Create(List<Stat> allStats);
+        public abstract Condition Create(Dictionary<StatType, Stat> allStats);
     }
 }

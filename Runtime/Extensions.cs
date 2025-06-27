@@ -19,5 +19,10 @@ namespace HexTecGames.UpgradeSystem
             Stat result = stats.Find(x => x.StatType == type);
             return result;
         }
+
+        public static void Add(this Dictionary<StatType, Stat> dict, Stat stat)
+        {
+            dict.Add(stat.StatType, stat);
+        }
     }
 }

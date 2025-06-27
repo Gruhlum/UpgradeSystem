@@ -23,14 +23,14 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private CollectionType collectionType;
 
-        public ReadOnlyCollection<Stat> Stats
+        public List<Stat> Stats
         {
             get
             {
-                return stats.AsReadOnly();
+                return stats.Values.ToList();
             }
         }
-        protected List<Stat> stats;
+        protected Dictionary<StatType, Stat> stats;
 
         public event Action<Stat, int> OnStatUpgraded;
 
@@ -39,9 +39,9 @@ namespace HexTecGames.UpgradeSystem
             int total = 0;
             foreach (var stat in stats)
             {
-                if (stat.IsValidUpgrade(rarity))
+                if (stat.Value.IsValidUpgrade(rarity))
                 {
-                    total += stat.UpgradeInfo.Tickets;
+                    total += stat.Value.UpgradeInfo.Tickets;
                 }
             }
             return total;
@@ -49,18 +49,12 @@ namespace HexTecGames.UpgradeSystem
 
         public Stat Find(StatType type)
         {
-            Stat stat = stats.Find(type);
-            if (stat == null)
+            if (stats.TryGetValue(type, out Stat stat))
             {
-                if (stats.Any(x => x.StatType.name == "Experience"))
-                {
-                    Debug.Log("Is virus");
-                }
-                else Debug.Log("Is player");
-
-                Debug.Log("Could not find stat of type: " + type);
+                return stat;
             }
-            return stat;
+            Debug.Log("Could not find stat of type: " + type);
+            return null;
         }
 
         protected virtual void InitializeData() { }
@@ -73,7 +67,7 @@ namespace HexTecGames.UpgradeSystem
         }
         private void InitStats()
         {
-            foreach (var stat in stats)
+            foreach (var stat in stats.Values)
             {
                 if (stat == null)
                 {
@@ -84,7 +78,7 @@ namespace HexTecGames.UpgradeSystem
         }
         private void AddEvents()
         {
-            foreach (var stat in stats)
+            foreach (var stat in stats.Values)
             {
                 stat.OnUpgraded += Stat_OnUpgraded;
             }
@@ -94,20 +88,20 @@ namespace HexTecGames.UpgradeSystem
         {
             foreach (var stat in stats)
             {
-                stat.LevelUp();
+                stat.Value.LevelUp();
             }
         }
         private void Stat_OnUpgraded(Stat stat, int increase)
         {
             OnStatUpgraded?.Invoke(stat, increase);
         }
-        protected List<Stat> GenerateStatList()
+        protected Dictionary<StatType, Stat> GenerateStatList()
         {
-            List<Stat> results = new List<Stat>();
+            Dictionary<StatType, Stat> results = new Dictionary<StatType, Stat>();
             AddStatsToList(results);
             return results;
         }
-        public List<Stat> GetStats()
+        public Dictionary<StatType, Stat> GetStats()
         {
 #if UNITY_EDITOR
             if (Application.isEditor)
@@ -115,20 +109,18 @@ namespace HexTecGames.UpgradeSystem
                 return GenerateStatList();
             }
 #endif
-            return new List<Stat>(stats);
+            return stats;
         }
-        protected abstract void AddStatsToList(List<Stat> stats);
+        protected abstract void AddStatsToList(Dictionary<StatType, Stat> stats);
 
         public IEnumerator<Stat> GetEnumerator()
         {
-            return stats.GetEnumerator();
+            return stats.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
-
-        
     }
 }

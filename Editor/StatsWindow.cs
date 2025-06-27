@@ -107,7 +107,6 @@ namespace HexTecGames
             {
                 EditorUtility.SetDirty(item);
             }
-            Debug.Log("Dirty All");
         }
 
         private void OnGUI()
@@ -117,7 +116,7 @@ namespace HexTecGames
             {
                 if (stats == null)
                 {
-                    _tableView = CreateTable(playerCollection.First().GetStats());
+                    _tableView = CreateTable(playerCollection.First().GetStats().Values.ToList());
                 }
                 else _tableView = CreateTable(stats.ToList());
             }
@@ -131,7 +130,7 @@ namespace HexTecGames
             {
                 if (GUILayout.Button(item.name))
                 {
-                    _tableView = CreateTable(item.GetStats());
+                    _tableView = CreateTable(item.GetStats().Values.ToList());
                     DirtyAll();
                 }
             }
@@ -144,7 +143,7 @@ namespace HexTecGames
             {
                 if (GUILayout.Button(item.name))
                 {
-                    _tableView = CreateTable(item.GetStats());
+                    _tableView = CreateTable(item.GetStats().Values.ToList());
                     DirtyAll();
                 }
             }

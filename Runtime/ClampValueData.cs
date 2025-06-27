@@ -21,7 +21,7 @@ namespace HexTecGames.UpgradeSystem
             this.value = value;
             clampType = StatClamp.Value;
         }
-        public ClampValue GenerateClampValue(ClampType type, List<Stat> allStats)
+        public ClampValue GenerateClampValue(ClampType type, Dictionary<StatType, Stat> allStats)
         {
             if (clampType == StatClamp.None)
             {
@@ -33,7 +33,7 @@ namespace HexTecGames.UpgradeSystem
             }
             else
             {
-                return new ClampValue(type, allStats.Find(statType));
+                return new ClampValue(type, allStats.GetValueOrDefault(statType));
             }
         }
 

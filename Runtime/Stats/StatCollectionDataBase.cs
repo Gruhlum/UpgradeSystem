@@ -6,6 +6,6 @@ namespace HexTecGames.UpgradeSystem
 {
     public abstract class StatCollectionDataBase : ScriptableObject
     {
-        public abstract List<Stat> GetStats();
+        public abstract Dictionary<StatType, Stat> GetStats();
     }
 }

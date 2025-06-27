@@ -159,7 +159,7 @@ namespace HexTecGames.UpgradeSystem
             {
                 return;
             }
-            Debug.Log($"Increasing {statType.name} by {increasePerLevelUp}");
+            //Debug.Log($"Increasing {statType.name} by {increasePerLevelUp}");
             FlatValue += increasePerLevelUp;
             OnUpgraded?.Invoke(this, increasePerLevelUp);
         }
@@ -219,7 +219,7 @@ namespace HexTecGames.UpgradeSystem
             return Mathf.RoundToInt(baseValue * multi); // 82.8
         }
 
-        public void Initialize(List<Stat> allStats)
+        public void Initialize(Dictionary<StatType, Stat> allStats)
         {
             MinValue = minValueData.GenerateClampValue(ClampType.Min, allStats);
             MaxValue = maxValueData.GenerateClampValue(ClampType.Max, allStats);
@@ -383,346 +383,186 @@ namespace HexTecGames.UpgradeSystem
             return textData;
         }
 
-        public static int operator +(Stat a, int value)
+        public static int operator +(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value + value;
+            return stat.Value + value;
         }
-        public static int operator +(int value, Stat a)
+        public static int operator +(int value, Stat stat)
         {
-            return a + value;
+            return stat + value;
         }
-        public static int operator -(Stat a, int value)
+        public static int operator -(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value - value;
+            return stat.Value - value;
         }
-        public static int operator -(int value, Stat a)
+        public static int operator -(int value, Stat stat)
         {
-            return a - value;
+            return stat - value;
         }
-        public static int operator *(Stat a, int value)
+        public static int operator *(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value * value;
+            return stat.Value * value;
         }
-        public static int operator *(int value, Stat a)
+        public static int operator *(int value, Stat stat)
         {
-            return a * value;
+            return value * stat.Value;
         }
-        public static int operator /(Stat a, int value)
+        public static int operator /(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value / value;
+            return stat.Value / value;
         }
-        public static int operator /(int value, Stat a)
+        public static int operator /(int value, Stat stat)
         {
-            return a / value;
+            return value / stat.Value;
         }
 
-        public static float operator +(Stat a, float value)
+        public static float operator +(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value + value;
+            return stat.Value + value;
         }
-        public static float operator +(float value, Stat a)
+        public static float operator +(float value, Stat stat)
         {
-            return a + value;
+            return stat + value;
         }
-        public static float operator -(Stat a, float value)
+        public static float operator -(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value - value;
+            return stat.Value - value;
         }
-        public static float operator -(float value, Stat a)
+        public static float operator -(float value, Stat stat)
         {
-            return a - value;
+            return stat - value;
         }
-        public static float operator *(Stat a, float value)
+        public static float operator *(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value * value;
+            return stat.Value * value;
         }
-        public static float operator *(float value, Stat a)
+        public static float operator *(float value, Stat stat)
         {
-            return a * value;
+            return value * stat.Value;
         }
-        public static float operator /(Stat a, float value)
+        public static float operator /(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return value;
-            }
-            return a.Value / value;
+            return stat.Value / value;
         }
-        public static float operator /(float value, Stat a)
+        public static float operator /(float value, Stat stat)
         {
-            return a / value;
+            return value / stat.Value;
         }
 
-        public static bool operator >(Stat a, int value)
+        public static bool operator >(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value > value;
+            return stat.Value > value;
         }
-        public static bool operator >(int value, Stat a)
+        public static bool operator >(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value > a.Value;
+            return value > stat.Value;
         }
-        public static bool operator <(Stat a, int value)
+        public static bool operator <(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value < value;
+            return stat.Value < value;
         }
-        public static bool operator <(int value, Stat a)
+        public static bool operator <(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value < a.Value;
+            return value < stat.Value;
         }
-        public static bool operator >(Stat a, float value)
+        public static bool operator >(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value > value;
+            return stat.Value > value;
         }
-        public static bool operator >(float value, Stat a)
+        public static bool operator >(float value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value > a.Value;
+            return value > stat.Value;
         }
-        public static bool operator <(Stat a, float value)
+        public static bool operator <(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value < value;
+            return stat.Value < value;
         }
-        public static bool operator <(float value, Stat a)
+        public static bool operator <(float value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value < a.Value;
+            return value < stat.Value;
         }
 
-        public static bool operator >=(Stat a, int value)
+        public static bool operator >=(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value >= value;
+            return stat.Value >= value;
         }
-        public static bool operator >=(int value, Stat a)
+        public static bool operator >=(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value >= a.Value;
+            return value >= stat.Value;
         }
-        public static bool operator <=(Stat a, int value)
+        public static bool operator <=(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value <= value;
+            return stat.Value <= value;
         }
-        public static bool operator <=(int value, Stat a)
+        public static bool operator <=(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value <= a.Value;
+            return value <= stat.Value;
         }
 
-        public static bool operator >=(Stat a, float value)
+        public static bool operator >=(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value >= value;
+            return stat.Value >= value;
         }
-        public static bool operator >=(float value, Stat a)
+        public static bool operator >=(float value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value >= a.Value;
+            return value >= stat.Value;
         }
-        public static bool operator <=(Stat a, float value)
+        public static bool operator <=(Stat stat, float value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value <= value;
+            return stat.Value <= value;
         }
-        public static bool operator <=(float value, Stat a)
+        public static bool operator <=(float value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value <= a.Value;
+            return value <= stat.Value;
         }
 
-        public static bool operator ==(Stat a, int value)
+        public static bool operator ==(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return a.Value == value;
+            return stat.Value == value;
         }
-        public static bool operator ==(int value, Stat a)
+        public static bool operator ==(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            return value == a.Value;
+            return value == stat.Value;
         }
-        public static bool operator !=(Stat a, int value)
+        public static bool operator !=(Stat stat, int value)
         {
-            if (a == null)
-            {
-                return true;
-            }
-            return a.Value != value;
+            return stat.Value != value;
         }
-        public static bool operator !=(int value, Stat a)
+        public static bool operator !=(int value, Stat stat)
         {
-            if (a == null)
-            {
-                return true;
-            }
-            return value != a.Value;
+            return value != stat.Value;
         }
 
         public static int operator +(Stat a, Stat b)
         {
-            if (a != null && b != null)
-            {
-                return a.Value + b.Value;
-            }
-            return 0;
+            return a.Value + b.Value;
         }
         public static int operator -(Stat a, Stat b)
         {
-            if (a != null && b != null)
-            {
-                return a.Value - b.Value;
-            }
-            return 0;
+            return a.Value - b.Value;
         }
         public static int operator *(Stat a, Stat b)
         {
-            if (a != null && b != null)
-            {
-                return a.Value * b.Value;
-            }
-            return 0;
+            return a.Value * b.Value;
         }
         public static int operator /(Stat a, Stat b)
         {
-            if (a != null && b != null)
-            {
-                return a.Value / b.Value;
-            }
-            return 0;
+            return a.Value / b.Value;
         }
         public static bool operator >(Stat a, Stat b)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            if (b == null)
-            {
-                return true;
-            }
             return a.Value > b.Value;
         }
         public static bool operator <(Stat a, Stat b)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            if (b == null)
-            {
-                return true;
-            }
             return a.Value < b.Value;
         }
         public static bool operator >=(Stat a, Stat b)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            if (b == null)
-            {
-                return true;
-            }
             return a.Value >= b.Value;
         }
         public static bool operator <=(Stat a, Stat b)
         {
-            if (a == null)
-            {
-                return false;
-            }
-            if (b == null)
-            {
-                return true;
-            }
             return a.Value <= b.Value;
         }
     }

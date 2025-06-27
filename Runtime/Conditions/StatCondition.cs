@@ -22,9 +22,9 @@ namespace HexTecGames.UpgradeSystem
             this.linkedStat = linkedStat;
         }
 
-        public override Condition Create(List<Stat> allStats)
+        public override Condition Create(Dictionary<StatType, Stat> allStats)
         {
-            Stat linkedStat = allStats.Find(statType);
+            Stat linkedStat = allStats.GetValueOrDefault(statType);
             return new StatCondition(statType, symbol, compareValue, linkedStat);
         }
 

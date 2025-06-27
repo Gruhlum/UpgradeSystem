@@ -184,7 +184,7 @@ namespace HexTecGames.UpgradeSystem
             return efficiency;
         }
 
-        protected override void AddStatsToList(List<Stat> stats)
+        protected override void AddStatsToList(Dictionary<StatType, Stat> stats)
         {
             stats.Add(TotalUpgrades);
             stats.Add(TurnsPerReroll);
@@ -206,12 +206,13 @@ namespace HexTecGames.UpgradeSystem
         {
             stats.Tickets = Tickets;
 
-            List<Stat> originalStats = GetStats();
-            List<Stat> targetStats = stats.GetStats();
+            Dictionary<StatType, Stat> originalStats = GetStats();
+            Dictionary<StatType, Stat> targetStats = stats.GetStats();
 
-            for (int i = 0; i < originalStats.Count; i++)
+            foreach (var targetStat in targetStats.Values)
             {
-                targetStats[i].CopyFrom(originalStats[i]);
+                originalStats.TryGetValue(targetStat.StatType, out Stat originalStat);
+                targetStat.CopyFrom(originalStat);
             }
         }
         public UpgradeControllerStats CreateCopy()

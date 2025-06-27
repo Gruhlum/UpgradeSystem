@@ -14,7 +14,7 @@ namespace HexTecGames.UpgradeSystem
             this.statCollection = stats.CreateCopy();
         }
 
-        public override List<Stat> GetStats()
+        public override Dictionary<StatType, Stat> GetStats()
         {
             return statCollection.GetStats();
         }

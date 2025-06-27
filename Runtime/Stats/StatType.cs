@@ -13,6 +13,7 @@ namespace HexTecGames.UpgradeSystem
 
         [SerializeField] private bool isPercent = default;
         [SerializeField] private string shortName = default;
+        [SerializeField] private int defaultValue = default;
         [SerializeField, TextArea] private string description = default;
         [Space]
         [SerializeField] private bool ignore = default;
@@ -84,6 +85,19 @@ namespace HexTecGames.UpgradeSystem
             set
             {
                 this.description = value;
+            }
+        }
+
+        public int DefaultValue
+        {
+            get
+            {
+                return this.defaultValue;
+            }
+
+            set
+            {
+                this.defaultValue = value;
             }
         }
 
