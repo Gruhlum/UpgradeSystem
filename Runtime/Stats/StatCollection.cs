@@ -10,38 +10,39 @@ namespace HexTecGames.UpgradeSystem
 {
     public abstract class StatCollection : IEnumerable<Stat>
     {
-        public CollectionType CollectionType
+        public string Name
         {
             get
             {
-                return collectionType;
+                return name;
             }
-            protected set
+            set
             {
-                collectionType = value;
+                name = value;
             }
         }
-        [SerializeField] private CollectionType collectionType;
+        [SerializeField] private string name;
 
-        public List<Stat> Stats
-        {
-            get
-            {
-                return stats.Values.ToList();
-            }
-        }
-        protected Dictionary<StatType, Stat> stats;
+        protected List<Stat> stats;
 
         public event Action<Stat, int> OnStatUpgraded;
+
+        //private Dictionary<StatType, Stat> statDictionary;
+
+
+        public StatCollection()
+        {
+            stats = GenerateStatList();
+        }
 
         public int GetTotalTickets(Rarity rarity)
         {
             int total = 0;
             foreach (var stat in stats)
             {
-                if (stat.Value.IsValidUpgrade(rarity))
+                if (stat.IsValidUpgrade(rarity))
                 {
-                    total += stat.Value.UpgradeInfo.Tickets;
+                    total += stat.UpgradeInfo.Tickets;
                 }
             }
             return total;
@@ -49,25 +50,48 @@ namespace HexTecGames.UpgradeSystem
 
         public Stat Find(StatType type)
         {
-            if (stats.TryGetValue(type, out Stat stat))
-            {
-                return stat;
-            }
-            Debug.Log("Could not find stat of type: " + type);
-            return null;
+            return stats.Find(type);
+
+            //if (statDictionary.TryGetValue(type, out Stat stat))
+            //{
+            //    return stat;
+            //}
+            //Debug.Log("Could not find stat of type: " + type);
+            //return null;
         }
 
         protected virtual void InitializeData() { }
         public void Initialize()
         {
             stats = GenerateStatList();
+            //GenerateDictionary();
             InitStats();
             InitializeData();
             AddEvents();
         }
+
+        //private void GenerateDictionary()
+        //{
+        //    statDictionary = new Dictionary<StatType, Stat>();
+
+        //    foreach (var stat in stats)
+        //    {
+        //        if (stat == null)
+        //        {
+        //            Debug.LogError("Stat is null!");
+        //        }
+        //        else if (stat.StatType == null)
+        //        {
+        //            Debug.LogError("StatType is null!");
+        //        }
+        //        statDictionary.Add(stat);
+        //    }
+        //}
+
+
         private void InitStats()
         {
-            foreach (var stat in stats.Values)
+            foreach (var stat in stats)
             {
                 if (stat == null)
                 {
@@ -78,9 +102,34 @@ namespace HexTecGames.UpgradeSystem
         }
         private void AddEvents()
         {
-            foreach (var stat in stats.Values)
+            foreach (var stat in stats)
             {
                 stat.OnUpgraded += Stat_OnUpgraded;
+            }
+        }
+
+        public void ApplyStatValues(Dictionary<StatType, int> statValues)
+        {
+            foreach (var statValue in statValues)
+            {
+                if (stats == null || stats.Count <= 0)
+                {
+                    Debug.Log("HUUUH");
+                    return;
+                }
+                if (statValue.Key == null)
+                {
+                    Debug.Log("HUsddsUUH");
+                    return;
+                }
+
+                var stat = stats.Find(statValue.Key);
+                if (stat == null)
+                {
+                    Debug.Log("Could not find stat: " + statValue.Key);
+                }
+
+                stat.FlatValue += statValue.Value;
             }
         }
 
@@ -88,34 +137,29 @@ namespace HexTecGames.UpgradeSystem
         {
             foreach (var stat in stats)
             {
-                stat.Value.LevelUp();
+                stat.LevelUp();
             }
         }
         private void Stat_OnUpgraded(Stat stat, int increase)
         {
             OnStatUpgraded?.Invoke(stat, increase);
         }
-        protected Dictionary<StatType, Stat> GenerateStatList()
+        protected List<Stat> GenerateStatList()
         {
-            Dictionary<StatType, Stat> results = new Dictionary<StatType, Stat>();
+            List<Stat> results = new List<Stat>();
             AddStatsToList(results);
+
             return results;
         }
-        public Dictionary<StatType, Stat> GetStats()
+        public List<Stat> GetStats()
         {
-#if UNITY_EDITOR
-            if (Application.isEditor)
-            {
-                return GenerateStatList();
-            }
-#endif
             return stats;
         }
-        protected abstract void AddStatsToList(Dictionary<StatType, Stat> stats);
+        protected abstract void AddStatsToList(List<Stat> stats);
 
         public IEnumerator<Stat> GetEnumerator()
         {
-            return stats.Values.GetEnumerator();
+            return stats.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

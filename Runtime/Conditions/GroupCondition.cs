@@ -41,7 +41,7 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
-        public override Condition Create(Dictionary<StatType, Stat> allStats)
+        public override Condition Create(List<Stat> allStats)
         {
             List<Condition> conditionCopies = new List<Condition>();
             foreach (var condition in conditions)

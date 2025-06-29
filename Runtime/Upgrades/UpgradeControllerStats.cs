@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class UpgradeControllerStats : StatCollection, ICloneable<UpgradeControllerStats>, ITicket
+    public class UpgradeControllerStats : CloneableStatCollection<UpgradeControllerStats>, ITicket
     {
         public int Tickets
         {
@@ -139,7 +139,6 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private Stat multiChance = new Stat();
 
-
         public Stat DoubleUpgradeChance
         {
             get
@@ -184,7 +183,7 @@ namespace HexTecGames.UpgradeSystem
             return efficiency;
         }
 
-        protected override void AddStatsToList(Dictionary<StatType, Stat> stats)
+        protected override void AddStatsToList(List<Stat> stats)
         {
             stats.Add(TotalUpgrades);
             stats.Add(TurnsPerReroll);
@@ -202,20 +201,13 @@ namespace HexTecGames.UpgradeSystem
         }
 
 
-        protected void CopyStats(UpgradeControllerStats stats)
+        protected override void CopyStats(UpgradeControllerStats target)
         {
-            stats.Tickets = Tickets;
+            target.Tickets = Tickets;
 
-            Dictionary<StatType, Stat> originalStats = GetStats();
-            Dictionary<StatType, Stat> targetStats = stats.GetStats();
-
-            foreach (var targetStat in targetStats.Values)
-            {
-                originalStats.TryGetValue(targetStat.StatType, out Stat originalStat);
-                targetStat.CopyFrom(originalStat);
-            }
+            base.CopyStats(target);
         }
-        public UpgradeControllerStats CreateCopy()
+        public override UpgradeControllerStats CreateCopy()
         {
             UpgradeControllerStats clone = new UpgradeControllerStats();
             CopyStats(clone);

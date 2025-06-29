@@ -84,7 +84,7 @@ namespace HexTecGames.UpgradeSystem
         private int totalUpgrades;
 
 
-        public UpgradeInfo Create(Stat stat, Dictionary<StatType, Stat> allStats)
+        public UpgradeInfo Create(Stat stat, List<Stat> allStats)
         {
             if (multiStatType == null && upgradeType == UpgradeType.RarityIncrease)
             {
@@ -104,7 +104,7 @@ namespace HexTecGames.UpgradeSystem
 
             if (multiStatType != null)
             {
-                clone.multiUpgradeStat = allStats.GetValueOrDefault(multiStatType);
+                clone.multiUpgradeStat = allStats.Find(multiStatType);
             }
             if (this.condition != null)
             {

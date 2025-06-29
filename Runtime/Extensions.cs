@@ -8,7 +8,7 @@ namespace HexTecGames.UpgradeSystem
     {
         public static Stat Find(this List<Stat> stats, StatType type)
         {
-            if (stats == null)
+            if (stats == null || stats.Count <= 0)
             {
                 Debug.Log("huh");
             }
@@ -22,6 +22,11 @@ namespace HexTecGames.UpgradeSystem
 
         public static void Add(this Dictionary<StatType, Stat> dict, Stat stat)
         {
+            if (stat.StatType == null)
+            {
+                //Debug.Log(stat.Value);
+                return;
+            }
             dict.Add(stat.StatType, stat);
         }
     }

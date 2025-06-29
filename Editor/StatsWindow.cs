@@ -116,7 +116,7 @@ namespace HexTecGames
             {
                 if (stats == null)
                 {
-                    _tableView = CreateTable(playerCollection.First().GetStats().Values.ToList());
+                    _tableView = CreateTable(playerCollection.First().GetStats());
                 }
                 else _tableView = CreateTable(stats.ToList());
             }
@@ -130,7 +130,7 @@ namespace HexTecGames
             {
                 if (GUILayout.Button(item.name))
                 {
-                    _tableView = CreateTable(item.GetStats().Values.ToList());
+                    _tableView = CreateTable(item.GetStats());
                     DirtyAll();
                 }
             }
@@ -143,7 +143,7 @@ namespace HexTecGames
             {
                 if (GUILayout.Button(item.name))
                 {
-                    _tableView = CreateTable(item.GetStats().Values.ToList());
+                    _tableView = CreateTable(item.GetStats());
                     DirtyAll();
                 }
             }

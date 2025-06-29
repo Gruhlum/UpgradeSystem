@@ -14,7 +14,7 @@ namespace HexTecGames.UpgradeSystem
             this.maximumUpgrades = maximumUpgrades;
         }
 
-        public override Condition Create(Dictionary<StatType, Stat> allStats)
+        public override Condition Create(List<Stat> allStats)
         {
             return new TotalCondition(maximumUpgrades);
         }

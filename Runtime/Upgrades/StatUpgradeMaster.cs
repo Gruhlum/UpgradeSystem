@@ -86,7 +86,7 @@ namespace HexTecGames.UpgradeSystem
             Efficiency singleEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Single);
             Efficiency multiEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Multi);
 
-            foreach (var stat in statCollection.Stats)
+            foreach (var stat in statCollection)
             {
                 if (stat.IsValidUpgrade(rarity))
                 {

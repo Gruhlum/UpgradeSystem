@@ -219,7 +219,7 @@ namespace HexTecGames.UpgradeSystem
             return Mathf.RoundToInt(baseValue * multi); // 82.8
         }
 
-        public void Initialize(Dictionary<StatType, Stat> allStats)
+        public void Initialize(List<Stat> allStats)
         {
             MinValue = minValueData.GenerateClampValue(ClampType.Min, allStats);
             MaxValue = maxValueData.GenerateClampValue(ClampType.Max, allStats);
