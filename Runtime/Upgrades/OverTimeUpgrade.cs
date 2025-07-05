@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using HexTecGames.Basics.UI;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
@@ -25,7 +21,7 @@ namespace HexTecGames.UpgradeSystem
 
         public override TableText GetDescription()
         {
-            var result = stat.UpgradeInfo.GetMainDescription(stat, rarity, efficiency);
+            TableText result = stat.UpgradeInfo.GetMainDescription(stat, rarity, efficiency);
             result.multiTexts.Add(new MultiText("Every Level Up"));
             return result;
         }

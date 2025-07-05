@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using HexTecGames.Basics.UI;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
@@ -19,7 +16,7 @@ namespace HexTecGames.UpgradeSystem
 
         public override void Apply()
         {
-            foreach (var upgrade in statUpgrades)
+            foreach (SingleUpgrade upgrade in statUpgrades)
             {
                 upgrade.Apply();
             }
@@ -29,7 +26,7 @@ namespace HexTecGames.UpgradeSystem
         {
             TableText results = new TableText();
 
-            foreach (var upgrade in statUpgrades)
+            foreach (SingleUpgrade upgrade in statUpgrades)
             {
                 results.multiTexts.AddRange(upgrade.GetDescription().multiTexts);
             }
@@ -42,7 +39,7 @@ namespace HexTecGames.UpgradeSystem
         {
             List<string> results = new List<string>(statUpgrades.Count);
 
-            foreach (var upgrade in statUpgrades)
+            foreach (SingleUpgrade upgrade in statUpgrades)
             {
                 results.Add(upgrade.GetExtraDescription());
             }

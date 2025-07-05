@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         [ContextMenu("Apply Upgrade")]
         public void GetUpgrade()
         {
-            var results = RollUpgrades(3);
+            List<Upgrade> results = RollUpgrades(3);
             ApplyUpgrade(results.Random());
         }
         public void ApplyUpgrade(Upgrade upgrade)

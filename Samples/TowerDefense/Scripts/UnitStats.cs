@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics.Decks;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem.TowerDefense
 {
@@ -31,7 +29,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
             //clone.CurrentHP = CurrentHP.CreateCopy() as ClampedStat;
             return clone;
         }
-        
+
 
         private void CritChance_OnValueChanged(Stat stat, int value)
         {

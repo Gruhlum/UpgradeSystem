@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.UpgradeSystem;
@@ -22,7 +21,7 @@ namespace HexTecGames
         [MenuItem("Stats/Show")]
         private static void ShowWindow()
         {
-            var window = GetWindow<StatsWindow>();
+            StatsWindow window = GetWindow<StatsWindow>();
             window.titleContent = new GUIContent("Stats");
             window.Show();
         }
@@ -99,11 +98,11 @@ namespace HexTecGames
 
         private void DirtyAll()
         {
-            foreach (var item in playerCollection)
+            foreach (StatCollectionDataBase item in playerCollection)
             {
                 EditorUtility.SetDirty(item);
             }
-            foreach (var item in enemyCollection)
+            foreach (StatCollectionDataBase item in enemyCollection)
             {
                 EditorUtility.SetDirty(item);
             }
@@ -126,7 +125,7 @@ namespace HexTecGames
         {
             EditorGUILayout.BeginHorizontal();
 
-            foreach (var item in playerCollection)
+            foreach (StatCollectionDataBase item in playerCollection)
             {
                 if (GUILayout.Button(item.name))
                 {
@@ -139,7 +138,7 @@ namespace HexTecGames
             //EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
 
-            foreach (var item in enemyCollection)
+            foreach (StatCollectionDataBase item in enemyCollection)
             {
                 if (GUILayout.Button(item.name))
                 {

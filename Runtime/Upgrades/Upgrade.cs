@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
     public abstract class Upgrade : ITicket
-    {      
+    {
         public Rarity rarity;
 
         public virtual int Tickets

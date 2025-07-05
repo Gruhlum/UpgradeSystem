@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ namespace HexTecGames.UpgradeSystem
         {
             if (conditionType == ConditionType.Any)
             {
-                foreach (var condition in conditions)
+                foreach (Condition condition in conditions)
                 {
                     if (condition.IsValid(stat, rarity))
                     {
@@ -30,7 +29,7 @@ namespace HexTecGames.UpgradeSystem
             }
             else
             {
-                foreach (var condition in conditions)
+                foreach (Condition condition in conditions)
                 {
                     if (!condition.IsValid(stat, rarity))
                     {
@@ -44,7 +43,7 @@ namespace HexTecGames.UpgradeSystem
         public override Condition Create(List<Stat> allStats)
         {
             List<Condition> conditionCopies = new List<Condition>();
-            foreach (var condition in conditions)
+            foreach (Condition condition in conditions)
             {
                 conditionCopies.Add(condition.Create(allStats));
             }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
@@ -58,6 +57,6 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
         {
             AttackData attackData = unitStats.GetAttackData();
             //damageTextController.RequestDamageText(transform.position, attackData.damage, attackData.isCrit);
-        } 
+        }
     }
 }

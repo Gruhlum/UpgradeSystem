@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -28,7 +27,7 @@ namespace HexTecGames.UpgradeSystem
         }
         public T CreateCopy()
         {
-            var collection = statCollection.CreateCopy();
+            T collection = statCollection.CreateCopy();
             if (statValues != null && statValues.Count > 0)
             {
                 Debug.Log(statValues.ElementAt(0));

@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
 using UnityEngine;
@@ -20,6 +18,7 @@ namespace HexTecGames.UpgradeSystem
             set
             {
                 statType = value;
+                UpdateValue();
             }
         }
         [SerializeField] private StatType statType;
@@ -107,9 +106,9 @@ namespace HexTecGames.UpgradeSystem
 
         private int increasePerLevelUp;
 
-
-        public event Action<Stat, int> OnValueChanged;
-        public event Action<Stat, int> OnUpgraded;
+        public delegate void ValueChangeEvent(Stat stat, int value);
+        public event ValueChangeEvent OnValueChanged;
+        public event ValueChangeEvent OnUpgraded;
 
 
         public Stat()
@@ -213,7 +212,7 @@ namespace HexTecGames.UpgradeSystem
             float multi = 1;
             for (int i = 0; i < multipliers.Count; i++)
             {
-                multi *= 1 + multipliers[i].Value / 100f; // 4.14
+                multi *= 1 + (multipliers[i].Value / 100f); // 4.14
             }
 
             return Mathf.RoundToInt(baseValue * multi); // 82.8

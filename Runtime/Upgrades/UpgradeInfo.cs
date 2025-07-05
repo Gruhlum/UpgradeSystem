@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
 using UnityEngine;
@@ -95,12 +92,14 @@ namespace HexTecGames.UpgradeSystem
                 Debug.Log("No Rarity: " + stat.StatType);
             }
 
-            UpgradeInfo clone = new UpgradeInfo();
-            clone.UpgradeType = this.UpgradeType;
-            clone.Rarity = this.Rarity;
-            clone.Increase = this.Increase;
-            clone.Tickets = this.Tickets;
-            clone.multiStatType = this.multiStatType;
+            UpgradeInfo clone = new UpgradeInfo
+            {
+                UpgradeType = this.UpgradeType,
+                Rarity = this.Rarity,
+                Increase = this.Increase,
+                Tickets = this.Tickets,
+                multiStatType = this.multiStatType
+            };
 
             if (multiStatType != null)
             {

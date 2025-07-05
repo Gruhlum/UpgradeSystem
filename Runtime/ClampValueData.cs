@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
@@ -33,17 +31,19 @@ namespace HexTecGames.UpgradeSystem
             }
             else
             {
-                
+
                 return new ClampValue(type, allStats.Find(statType));
             }
         }
 
         public ClampValueData CreateCopy()
         {
-            ClampValueData clone = new ClampValueData();
-            clone.clampType = clampType;
-            clone.value = value;
-            clone.statType = statType;
+            ClampValueData clone = new ClampValueData
+            {
+                clampType = clampType,
+                value = value,
+                statType = statType
+            };
             return clone;
         }
     }

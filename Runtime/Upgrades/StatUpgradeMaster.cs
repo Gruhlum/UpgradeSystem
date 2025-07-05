@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
@@ -28,7 +26,7 @@ namespace HexTecGames.UpgradeSystem
         public bool HasMultiUpgrade(float efficiency, int totalRequired)
         {
             int count = 0;
-            foreach (var item in upgrades)
+            foreach (StatUpgrade item in upgrades)
             {
                 if (item.CanBeMultiUpgrade(efficiency))
                 {
@@ -44,7 +42,7 @@ namespace HexTecGames.UpgradeSystem
         public bool HasOverTimeUpgrade(float efficiency, int totalRequired)
         {
             int count = 0;
-            foreach (var item in upgrades)
+            foreach (StatUpgrade item in upgrades)
             {
                 if (item.CanBeOverTimeUpgrade(efficiency))
                 {
@@ -86,7 +84,7 @@ namespace HexTecGames.UpgradeSystem
             Efficiency singleEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Single);
             Efficiency multiEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Multi);
 
-            foreach (var stat in statCollection)
+            foreach (Stat stat in statCollection)
             {
                 if (stat.IsValidUpgrade(rarity))
                 {
@@ -116,7 +114,7 @@ namespace HexTecGames.UpgradeSystem
         private List<SingleUpgrade> GenerateUpgradesForMultiUpgrade(Rarity targetRarity, Efficiency efficiency, List<Stat> results)
         {
             List<SingleUpgrade> upgrades = new List<SingleUpgrade>();
-            foreach (var result in results)
+            foreach (Stat result in results)
             {
                 SingleUpgrade upgrade = new SingleUpgrade(result, efficiency, targetRarity, 0);
                 upgrades.Add(upgrade);
@@ -145,7 +143,7 @@ namespace HexTecGames.UpgradeSystem
         {
             List<StatUpgrade> availableStats = new List<StatUpgrade>();
 
-            foreach (var upgrade in upgrades)
+            foreach (StatUpgrade upgrade in upgrades)
             {
                 if (upgrade.Stat.CanBeMultiUpgrade(rarity, efficiency))
                 {
@@ -158,7 +156,7 @@ namespace HexTecGames.UpgradeSystem
         {
             List<StatUpgrade> availableStats = new List<StatUpgrade>();
 
-            foreach (var upgrade in upgrades)
+            foreach (StatUpgrade upgrade in upgrades)
             {
                 if (upgrade.Stat.CanBeOverTimeUpgrade(rarity, efficiency))
                 {

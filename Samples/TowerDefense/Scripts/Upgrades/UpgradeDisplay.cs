@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using HexTecGames.Basics.UI;
 using TMPro;
 using UnityEngine;
@@ -13,7 +11,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
 
         public void OnPointerMove(PointerEventData eventData)
         {
-            var mousePosition = eventData.position;
+            Vector2 mousePosition = eventData.position;
             //mousePosition.z = 0;
             int index = TMP_TextUtilities.FindIntersectingLink(descriptionGUI, mousePosition, Camera.main);
             if (index <= 0)

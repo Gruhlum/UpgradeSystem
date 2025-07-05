@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
-using HexTecGames.UpgradeSystem;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem

@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
-using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
@@ -34,7 +31,7 @@ namespace HexTecGames.UpgradeSystem
         {
             if (efficiencyValues.Any(x => x.type == efficiencyValue.type))
             {
-                var result = efficiencyValues.Find(x => x.type == efficiencyValue.type);
+                EfficiencyValue result = efficiencyValues.Find(x => x.type == efficiencyValue.type);
                 result.value += efficiencyValue.value;
             }
             else efficiencyValues.Add(efficiencyValue);
@@ -58,7 +55,7 @@ namespace HexTecGames.UpgradeSystem
         private void CalculateTotal()
         {
             Total = 1;
-            foreach (var item in efficiencyValues)
+            foreach (EfficiencyValue item in efficiencyValues)
             {
                 Total *= item.value;
             }
@@ -94,7 +91,7 @@ namespace HexTecGames.UpgradeSystem
         {
             List<MultiText> multiTexts = new List<MultiText>();
 
-            foreach (var efficiencyValue in efficiencyValues)
+            foreach (EfficiencyValue efficiencyValue in efficiencyValues)
             {
                 if (efficiencyValue.value == 0)
                 {

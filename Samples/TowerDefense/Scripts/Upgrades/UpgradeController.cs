@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using HexTecGames.Basics;
 using UnityEngine;
@@ -65,7 +63,7 @@ namespace HexTecGames.UpgradeSystem.TowerDefense
 
         private List<Upgrade> GetUpgrades(int amount)
         {
-           return unit.GetAllValidUpgrades().RandomUnique(amount);
+            return unit.GetAllValidUpgrades().RandomUnique(amount);
         }
     }
 }

@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
@@ -38,7 +35,7 @@ namespace HexTecGames.UpgradeSystem
         public int GetTotalTickets(Rarity rarity)
         {
             int total = 0;
-            foreach (var stat in stats)
+            foreach (Stat stat in stats)
             {
                 if (stat.IsValidUpgrade(rarity))
                 {
@@ -91,7 +88,7 @@ namespace HexTecGames.UpgradeSystem
 
         private void InitStats()
         {
-            foreach (var stat in stats)
+            foreach (Stat stat in stats)
             {
                 if (stat == null)
                 {
@@ -102,7 +99,7 @@ namespace HexTecGames.UpgradeSystem
         }
         private void AddEvents()
         {
-            foreach (var stat in stats)
+            foreach (Stat stat in stats)
             {
                 stat.OnUpgraded += Stat_OnUpgraded;
             }
@@ -110,7 +107,7 @@ namespace HexTecGames.UpgradeSystem
 
         public void ApplyStatValues(Dictionary<StatType, int> statValues)
         {
-            foreach (var statValue in statValues)
+            foreach (KeyValuePair<StatType, int> statValue in statValues)
             {
                 if (stats == null || stats.Count <= 0)
                 {
@@ -123,7 +120,7 @@ namespace HexTecGames.UpgradeSystem
                     return;
                 }
 
-                var stat = stats.Find(statValue.Key);
+                Stat stat = stats.Find(statValue.Key);
                 if (stat == null)
                 {
                     Debug.Log("Could not find stat: " + statValue.Key);
@@ -135,7 +132,7 @@ namespace HexTecGames.UpgradeSystem
 
         public void LevelUp()
         {
-            foreach (var stat in stats)
+            foreach (Stat stat in stats)
             {
                 stat.LevelUp();
             }

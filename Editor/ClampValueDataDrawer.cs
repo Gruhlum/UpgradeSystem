@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,9 +17,11 @@ namespace HexTecGames.UpgradeSystem.Editor
             StatClamp statClamp = (StatClamp)property.FindPropertyRelative("clampType").intValue;
             Rect startRect = position;
 
-            GUIContent emptyLabel = new GUIContent();
-            emptyLabel.text = string.Empty;
-            position.width = position.width / 2 + 4;
+            GUIContent emptyLabel = new GUIContent
+            {
+                text = string.Empty
+            };
+            position.width = (position.width / 2) + 4;
 
             EditorGUI.PropertyField(position, property.FindPropertyRelative("clampType"), label);
 
