@@ -117,9 +117,9 @@ namespace HexTecGames.UpgradeSystem
             {
                 return 0;
             }
-            TotalUpgrades++;
             int upgradeValue = GetUpgradeValue(stat, rarity, efficiency);
             stat.FlatValue += upgradeValue;
+            TotalUpgrades++;
             return upgradeValue;
         }
         private int GetUpgradeValue(Stat stat, Rarity rarity)
@@ -135,39 +135,41 @@ namespace HexTecGames.UpgradeSystem
             if (UpgradeType == UpgradeType.RarityIncrease)
             {
                 int rarityDifference = rarity - this.Rarity.GetRarity(TotalUpgrades);
-                return increase * (1 + (rarityDifference / 2));
+                var result = increase * (1 + (rarityDifference / 2));
+                return result;
             }
             else return increase;
         }
         public int GetUpgradeValue(Stat stat, Rarity rarity, float efficiency)
         {
-            if (upgradeType != UpgradeType.RarityIncrease)
+            if (upgradeType == UpgradeType.RarityIncrease)
             {
-                return Mathf.RoundToInt(GetUpgradeValue(stat, rarity) * efficiency);
+                return Mathf.RoundToInt(GetUpgradeValue(stat, rarity));
             }
-            else return Mathf.RoundToInt(GetUpgradeValue(stat, rarity));
+            else return Mathf.RoundToInt(GetUpgradeValue(stat, rarity) * efficiency);
         }
 
-        public StatUpgrade GetUpgrade(Stat stat, Rarity rarity, Efficiency singleEfficiency, Efficiency multiEfficiency)
+        public StatUpgrade GetUpgrade(Stat stat, Rarity rarity, Efficiency singleEfficiency)
         {
             SingleUpgrade upgrade = new SingleUpgrade(stat, singleEfficiency, rarity, Tickets);
 
             if (upgradeType == UpgradeType.RarityIncrease)
             {
-                int rarityDifference = this.Rarity.GetRarity(TotalUpgrades) - rarity;
+                float requiredMulti = this.Rarity.GetRarity(TotalUpgrades).GetMultiplier();
+                float leftOverMulti = singleEfficiency.Total - requiredMulti;
 
-                if (rarityDifference == 0)
+                Efficiency leftOverEfficiency = new Efficiency();
+                leftOverEfficiency.Add(0, new EfficiencyValue("Remaining", MathMode.Add, leftOverMulti));
+
+                if (multiUpgradeStat.UpgradeInfo.GetUpgradeValue(stat, rarity, leftOverEfficiency.Total) <= 0)
                 {
                     return upgrade;
                 }
                 else
                 {
-                    Rarity targetRarity = rarity.GetRarity(-1);
-                    SingleUpgrade secondUpgrade = multiUpgradeStat.GetUpgrade(targetRarity, singleEfficiency, multiEfficiency) as SingleUpgrade;
-                    upgrade.Efficiency = singleEfficiency;
-                    secondUpgrade.Efficiency = multiEfficiency;
+                    SingleUpgrade secondUpgrade = multiUpgradeStat.GetUpgrade(rarity, leftOverEfficiency) as SingleUpgrade;
                     return new MultiStatUpgrade(new List<SingleUpgrade>() { upgrade, secondUpgrade }, rarity, Tickets);
-                }
+                } 
             }
             else return upgrade;
         }

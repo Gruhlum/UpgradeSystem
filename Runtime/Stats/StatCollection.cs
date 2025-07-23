@@ -26,6 +26,7 @@ namespace HexTecGames.UpgradeSystem
 
         //private Dictionary<StatType, Stat> statDictionary;
 
+        private bool isDataInitialized;
 
         public StatCollection()
         {
@@ -63,6 +64,12 @@ namespace HexTecGames.UpgradeSystem
             stats = GenerateStatList();
             //GenerateDictionary();
             InitStats();
+            if (isDataInitialized)
+            {
+                return;
+            }
+            isDataInitialized = true;
+
             InitializeData();
             AddEvents();
         }

@@ -5,15 +5,20 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public struct EfficiencyValue
     {
-        public TagType type;
+        public string type;
+        public MathMode mode;
         public float value;
-        public int order;
 
-        public EfficiencyValue(TagType type, float value, int order)
+        public EfficiencyValue(string type, MathMode mode, float value)
         {
             this.value = value;
+            this.mode = mode;
             this.type = type;
-            this.order = order;
+        }
+
+        public float Apply(float input)
+        {
+            return mode.Apply(input, value);
         }
 
         public string GetItem()

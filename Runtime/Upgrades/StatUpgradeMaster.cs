@@ -39,7 +39,7 @@ namespace HexTecGames.UpgradeSystem
             }
             return false;
         }
-        public bool HasOverTimeUpgrade(float efficiency, int totalRequired)
+        public bool HasPerLevelUpgrade(float efficiency, int totalRequired)
         {
             int count = 0;
             foreach (StatUpgrade item in upgrades)
@@ -58,17 +58,17 @@ namespace HexTecGames.UpgradeSystem
 
         public override Upgrade RollUpgrade()
         {
-            Efficiency overTimeEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.OverTime);
+            Efficiency perLevelEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.PerLevel);
             Efficiency multiEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.Multi);
 
-            bool canBeOverTime = HasOverTimeUpgrade(overTimeEfficiency.Total, 1);
+            bool canBePerLevel = HasPerLevelUpgrade(perLevelEfficiency.Total, 1);
             bool canBeMulti = HasMultiUpgrade(multiEfficiency.Total, 2);
 
-            StatUpgradeType upgradeType = upgradeStats.RollUpgradeType(canBeOverTime, canBeMulti);
+            StatUpgradeType upgradeType = upgradeStats.RollUpgradeType(canBePerLevel, canBeMulti);
             //Debug.Log($"{nameof(upgradeType)} {upgradeType}");
-            if (upgradeType == StatUpgradeType.OverTime)
+            if (upgradeType == StatUpgradeType.PerLevel)
             {
-                return GenerateOverTimeUpgrade(currentRarity, overTimeEfficiency);
+                return GeneratePerLevelUpgrade(currentRarity, perLevelEfficiency);
             }
             else if (upgradeType == StatUpgradeType.Multi)
             {
@@ -82,18 +82,17 @@ namespace HexTecGames.UpgradeSystem
             List<StatUpgrade> upgrades = new List<StatUpgrade>();
 
             Efficiency singleEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Single);
-            Efficiency multiEfficiency = upgradeStats.GetEfficiency(rarity, StatUpgradeType.Multi);
 
             foreach (Stat stat in statCollection)
             {
                 if (stat.IsValidUpgrade(rarity))
                 {
-                    upgrades.Add(stat.GetUpgrade(rarity, singleEfficiency, multiEfficiency));
+                    upgrades.Add(stat.GetUpgrade(rarity, singleEfficiency));
                 }
             }
             return upgrades;
         }
-        private OverTimeUpgrade GenerateOverTimeUpgrade(Rarity rarity, Efficiency efficiency)
+        private OverTimeUpgrade GeneratePerLevelUpgrade(Rarity rarity, Efficiency efficiency)
         {
             List<StatUpgrade> availableStats = GetPossibleOverTimeUpgrades(rarity, efficiency.Total);
             StatUpgrade result = ITicket.Roll(availableStats);

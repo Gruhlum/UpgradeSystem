@@ -34,31 +34,6 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private Stat totalUpgrades = new Stat();
 
-        public Stat TurnsPerReroll
-        {
-            get
-            {
-                return turnsPerReroll;
-            }
-            private set
-            {
-                turnsPerReroll = value;
-            }
-        }
-        [SerializeField] private Stat turnsPerReroll = new Stat();
-        public Stat CurrentRerollTicks
-        {
-            get
-            {
-                return currentRerollTicks;
-            }
-            private set
-            {
-                currentRerollTicks = value;
-            }
-        }
-        [SerializeField] private Stat currentRerollTicks = new Stat();
-
         public Stat AllEfficiency
         {
             get
@@ -111,18 +86,31 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private Stat overTimeEfficiency = new Stat();
 
-        public Stat OverTimeChance
+        public Stat PerLevelEfficiency
         {
             get
             {
-                return overTimeChance;
+                return perLevelEfficiency;
             }
             private set
             {
-                overTimeChance = value;
+                perLevelEfficiency = value;
             }
         }
-        [SerializeField] private Stat overTimeChance = new Stat();
+        [SerializeField] private Stat perLevelEfficiency = new Stat();
+
+        public Stat PerLevelChance
+        {
+            get
+            {
+                return perLevelChance;
+            }
+            private set
+            {
+                perLevelChance = value;
+            }
+        }
+        [SerializeField] private Stat perLevelChance = new Stat();
 
         public Stat MultiChance
         {
@@ -152,11 +140,11 @@ namespace HexTecGames.UpgradeSystem
 
 
 
-        public StatUpgradeType RollUpgradeType(bool allowOverTime, bool allowMulti)
+        public StatUpgradeType RollUpgradeType(bool allowPerLevel, bool allowMulti)
         {
-            if (allowOverTime && OverTimeChance.Value > Random.Range(0, 100))
+            if (allowPerLevel && PerLevelChance.Value > Random.Range(0, 100))
             {
-                return StatUpgradeType.OverTime;
+                return StatUpgradeType.PerLevel;
             }
             if (allowMulti && MultiChance.Value > Random.Range(0, 100))
             {
@@ -167,32 +155,33 @@ namespace HexTecGames.UpgradeSystem
         public Efficiency GetEfficiency(Rarity currentRarity, StatUpgradeType statUpgradeType)
         {
             Efficiency efficiency = new Efficiency();
-            efficiency.Add(currentRarity, currentRarity.GetMultiplier(), 0);
-            efficiency.Add(AllEfficiency, 1);
-            if (statUpgradeType == StatUpgradeType.OverTime)
+            efficiency.Add(0, currentRarity.name, MathMode.Add, currentRarity.GetMultiplier());
+            efficiency.Add(1, AllEfficiency, MathMode.Multiply);
+
+            if (statUpgradeType == StatUpgradeType.PerLevel)
             {
-                efficiency.Add(OverTimeEfficiency, 2);
+                efficiency.Add(2, PerLevelEfficiency, MathMode.Multiply);
             }
             else if (statUpgradeType == StatUpgradeType.Single)
             {
-                efficiency.Add(SingleEfficiency, 2);
+                efficiency.Add(2, SingleEfficiency, MathMode.Multiply);
             }
-            else efficiency.Add(MultiEfficiency, 2);
+            else efficiency.Add(2, MultiEfficiency, MathMode.Multiply);
+
+            efficiency.Add(3, OverTimeEfficiency, MathMode.Multiply);
             return efficiency;
         }
 
         protected override void AddStatsToList(List<Stat> stats)
         {
             stats.Add(TotalUpgrades);
-            stats.Add(TurnsPerReroll);
-            stats.Add(CurrentRerollTicks);
 
             stats.Add(AllEfficiency);
             stats.Add(SingleEfficiency);
             stats.Add(MultiEfficiency);
             stats.Add(OverTimeEfficiency);
 
-            stats.Add(OverTimeChance);
+            stats.Add(PerLevelChance);
             stats.Add(MultiChance);
 
             stats.Add(DoubleUpgradeChance);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HexTecGames.Basics;
 using HexTecGames.Basics.UI;
+using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
@@ -21,43 +22,47 @@ namespace HexTecGames.UpgradeSystem
         }
         private float total;
 
-        private List<EfficiencyValue> efficiencyValues = new List<EfficiencyValue>();
+        private SortedList<int, List<EfficiencyValue>> efficiencyValues = new SortedList<int, List<EfficiencyValue>>();
 
         public Efficiency()
         {
         }
 
-        public void Add(EfficiencyValue efficiencyValue)
+        public void Add(int order, EfficiencyValue efficiencyValue)
         {
-            if (efficiencyValues.Any(x => x.type == efficiencyValue.type))
+            efficiencyValues.Add(order, efficiencyValue);
+            CalculateTotal();
+        }
+        public void Add(int order, Stat stat, MathMode mode)
+        {
+            if (stat.StatType == null)
             {
-                EfficiencyValue result = efficiencyValues.Find(x => x.type == efficiencyValue.type);
-                result.value += efficiencyValue.value;
+                Add(order, string.Empty, mode, stat.Value / 100f);
             }
-            else efficiencyValues.Add(efficiencyValue);
-
-            CalculateTotal();
+            else Add(order, stat.StatType.name, mode, stat.Value / 100f);
         }
-        public void Add(Stat stat, int order)
+        public void Add(int order, string type, MathMode mode, float value)
         {
-            Add(stat.StatType, stat.Value / 100f, order);
+            Add(order, new EfficiencyValue(type, mode, value));
         }
-        public void Add(TagType type, float value, int order)
+        public void Remove(int order, EfficiencyValue efficiencyValue)
         {
-            Add(new EfficiencyValue(type, value, order));
-        }
-        public void Remove(EfficiencyValue efficiencyValue)
-        {
-            efficiencyValues.Remove(efficiencyValue);
-            CalculateTotal();
+            if (efficiencyValues.TryGetValue(order, out List<EfficiencyValue> result))
+            {
+                result.Remove(efficiencyValue);
+                CalculateTotal();
+            }
         }
 
         private void CalculateTotal()
         {
-            Total = 1;
-            foreach (EfficiencyValue item in efficiencyValues)
+            Total = 0;
+            foreach (var dictValue in efficiencyValues)
             {
-                Total *= item.value;
+                foreach (var efficiencyValue in dictValue.Value)
+                {
+                    Total = efficiencyValue.Apply(Total);
+                }
             }
         }
 
@@ -91,16 +96,24 @@ namespace HexTecGames.UpgradeSystem
         {
             List<MultiText> multiTexts = new List<MultiText>();
 
-            foreach (EfficiencyValue efficiencyValue in efficiencyValues)
+            foreach (var efficiencyValue in efficiencyValues)
             {
-                if (efficiencyValue.value == 0)
+                foreach (var item in efficiencyValue.Value)
                 {
-                    continue;
+                    if (item.mode == MathMode.Add && item.value == 0)
+                    {
+                        continue;
+                    }
+                    if (item.mode == MathMode.Multiply && item.value == 1)
+                    {
+                        continue;
+                    }
+                    multiTexts.Add(new MultiText(item.type, item.value.ToString("#.%")));
                 }
-                multiTexts.Add(new MultiText(efficiencyValue.type.name, efficiencyValue.value.ToString("0#.%")));
             }
             multiTexts.Add(new MultiText("----", string.Empty));
-            multiTexts.Add(new MultiText("Total", Total.ToString("0#.%")));
+            //multiTexts.Add(new MultiText("----", string.Empty));
+            multiTexts.Add(new MultiText("Total", Total.ToString("#.%")));
             return new TableText(multiTexts);
         }
     }

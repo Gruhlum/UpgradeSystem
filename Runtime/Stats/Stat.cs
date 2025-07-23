@@ -106,7 +106,7 @@ namespace HexTecGames.UpgradeSystem
 
         private int increasePerLevelUp;
 
-        public delegate void ValueChangeEvent(Stat stat, int value);
+        public delegate void ValueChangeEvent(Stat stat, int oldValue);
         public event ValueChangeEvent OnValueChanged;
         public event ValueChangeEvent OnUpgraded;
 
@@ -149,6 +149,7 @@ namespace HexTecGames.UpgradeSystem
 
         public void AddLevelUpValue(int value)
         {
+            FlatValue += value;
             increasePerLevelUp += value;
         }
 
@@ -187,8 +188,9 @@ namespace HexTecGames.UpgradeSystem
 
         private void UpdateValue()
         {
+            int oldValue = Value;
             Value = CalculateValue();
-            OnValueChanged?.Invoke(this, Value);
+            OnValueChanged?.Invoke(this, oldValue);
         }
 
         private int CalculateValue()
@@ -260,9 +262,9 @@ namespace HexTecGames.UpgradeSystem
             bool valid = upgradeInfo.IsValidUpgrade(this, rarity);
             return valid;
         }
-        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency singleEfficiency, Efficiency multiEfficiency)
+        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency singleEfficiency)
         {
-            return upgradeInfo.GetUpgrade(this, rarity, singleEfficiency, multiEfficiency);
+            return upgradeInfo.GetUpgrade(this, rarity, singleEfficiency);
         }
         public void Upgrade(Rarity rarity, float efficiency)
         {
