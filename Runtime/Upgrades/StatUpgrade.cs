@@ -27,6 +27,12 @@ namespace HexTecGames.UpgradeSystem
         }
         public bool CanBeOverTimeUpgrade(float efficiency)
         {
+            // If rarity is Epic or Legendary
+            if (rarity.GetIndex() > 1)
+            {
+                return false;
+            }
+
             return Stat.CanBeOverTimeUpgrade(rarity, efficiency);
         }
     }

@@ -116,5 +116,10 @@ namespace HexTecGames.UpgradeSystem
             multiTexts.Add(new MultiText("Total", Total.ToString("#.%")));
             return new TableText(multiTexts);
         }
+        public override string ToString()
+        {
+            return $"{Total} Efficiency";
+        }
+
     }
 }

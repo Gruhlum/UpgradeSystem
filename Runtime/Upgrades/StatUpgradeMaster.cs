@@ -61,7 +61,9 @@ namespace HexTecGames.UpgradeSystem
             Efficiency perLevelEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.PerLevel);
             Efficiency multiEfficiency = upgradeStats.GetEfficiency(currentRarity, StatUpgradeType.Multi);
 
+
             bool canBePerLevel = HasPerLevelUpgrade(perLevelEfficiency.Total, 1);
+            Debug.Log(perLevelEfficiency + " - " + canBePerLevel);
             bool canBeMulti = HasMultiUpgrade(multiEfficiency.Total, 2);
 
             StatUpgradeType upgradeType = upgradeStats.RollUpgradeType(canBePerLevel, canBeMulti);
