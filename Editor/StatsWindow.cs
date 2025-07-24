@@ -98,18 +98,29 @@ namespace HexTecGames
 
         private void DirtyAll()
         {
-            foreach (StatCollectionDataBase item in playerCollection)
+            if (playerCollection != null)
             {
-                EditorUtility.SetDirty(item);
+                foreach (StatCollectionDataBase item in playerCollection)
+                {
+                    EditorUtility.SetDirty(item);
+                }
             }
-            foreach (StatCollectionDataBase item in enemyCollection)
+            if (enemyCollection != null)
             {
-                EditorUtility.SetDirty(item);
+                foreach (StatCollectionDataBase item in enemyCollection)
+                {
+                    EditorUtility.SetDirty(item);
+                }
             }
         }
 
         private void OnGUI()
         {
+            if (playerCollection == null || enemyCollection == null)
+            {
+                return;
+            }
+
             TitleGUI();
             if (_tableView == null)
             {
