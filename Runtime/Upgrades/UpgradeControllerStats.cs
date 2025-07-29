@@ -161,7 +161,7 @@ namespace HexTecGames.UpgradeSystem
             if (statUpgradeType == StatUpgradeType.PerLevel)
             {
                 efficiency.Add(2, PerLevelEfficiency, MathMode.Multiply);
-                Debug.Log(PerLevelEfficiency);
+                //Debug.Log(PerLevelEfficiency);
             }
             else if (statUpgradeType == StatUpgradeType.Single)
             {

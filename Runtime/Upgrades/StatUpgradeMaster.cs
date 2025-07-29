@@ -63,7 +63,7 @@ namespace HexTecGames.UpgradeSystem
 
 
             bool canBePerLevel = HasPerLevelUpgrade(perLevelEfficiency.Total, 1);
-            Debug.Log(perLevelEfficiency + " - " + canBePerLevel);
+            //Debug.Log(perLevelEfficiency + " - " + canBePerLevel);
             bool canBeMulti = HasMultiUpgrade(multiEfficiency.Total, 2);
 
             StatUpgradeType upgradeType = upgradeStats.RollUpgradeType(canBePerLevel, canBeMulti);
