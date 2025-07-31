@@ -6,7 +6,14 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public abstract class CloneableStatCollection<T> : StatCollection, ICloneable<T> where T : StatCollection
     {
-        public abstract T CreateCopy();
+        protected abstract T InstantiateCopy();
+
+        public T CreateCopy()
+        {
+            T clone = InstantiateCopy();
+            CopyStats(clone);
+            return clone;
+        }
 
         protected virtual void CopyStats(T target)
         {

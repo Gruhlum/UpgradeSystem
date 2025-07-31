@@ -2,6 +2,6 @@ namespace HexTecGames.UpgradeSystem
 {
     public interface ICloneable<T>
     {
-        T CreateCopy();
+        public T CreateCopy();
     }
 }

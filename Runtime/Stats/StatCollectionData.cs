@@ -18,7 +18,7 @@ namespace HexTecGames.UpgradeSystem
 
         public void CopyFromStats(T stats)
         {
-            this.statCollection = stats.CreateCopy();
+            this.statCollection = stats.InstantiateCopy();
         }
 
         public override List<Stat> GetStats()
@@ -27,7 +27,7 @@ namespace HexTecGames.UpgradeSystem
         }
         public T CreateCopy()
         {
-            T collection = statCollection.CreateCopy();
+            T collection = statCollection.InstantiateCopy();
             if (statValues != null && statValues.Count > 0)
             {
                 Debug.Log(statValues.ElementAt(0));
