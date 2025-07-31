@@ -196,11 +196,9 @@ namespace HexTecGames.UpgradeSystem
 
             base.CopyStats(target);
         }
-        public override UpgradeControllerStats InstantiateCopy()
+        protected override UpgradeControllerStats InstantiateCopy()
         {
-            UpgradeControllerStats clone = new UpgradeControllerStats();
-            CopyStats(clone);
-            return clone;
+            return new UpgradeControllerStats();
         }
     }
 }
