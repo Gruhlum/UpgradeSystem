@@ -33,18 +33,18 @@ namespace HexTecGames.UpgradeSystem
             stats = GenerateStatList();
         }
 
-        public int GetTotalTickets(Rarity rarity)
-        {
-            int total = 0;
-            foreach (Stat stat in stats)
-            {
-                if (stat.IsValidUpgrade(rarity))
-                {
-                    total += stat.UpgradeInfo.Tickets;
-                }
-            }
-            return total;
-        }
+        //public int GetTotalTickets(Rarity rarity)
+        //{
+        //    int total = 0;
+        //    foreach (Stat stat in stats)
+        //    {
+        //        if (stat.IsValidUpgrade(rarity))
+        //        {
+        //            total += stat.UpgradeInfo.Tickets;
+        //        }
+        //    }
+        //    return total;
+        //}
 
         public Stat Find(StatType type)
         {

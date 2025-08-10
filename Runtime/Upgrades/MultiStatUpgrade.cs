@@ -5,11 +5,11 @@ using HexTecGames.Basics.UI;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class MultiStatUpgrade : StatUpgrade
+    public class MultiStatUpgrade : Upgrade
     {
         private List<SingleUpgrade> statUpgrades = new List<SingleUpgrade>();
 
-        public MultiStatUpgrade(List<SingleUpgrade> statUpgrades, Rarity rarity, int tickets) : base(statUpgrades[0].Stat, rarity, tickets)
+        public MultiStatUpgrade(List<SingleUpgrade> statUpgrades, Rarity rarity, int tickets) : base(rarity, tickets)
         {
             this.statUpgrades = statUpgrades;
         }

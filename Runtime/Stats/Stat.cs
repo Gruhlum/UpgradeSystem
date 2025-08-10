@@ -7,7 +7,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class Stat : IEquatable<Stat>, ITicket
+    public class Stat : IEquatable<Stat>
     {
         public StatType StatType
         {
@@ -39,19 +39,6 @@ namespace HexTecGames.UpgradeSystem
 
         [SerializeField] private ClampValueData minValueData;
         [SerializeField] private ClampValueData maxValueData;
-
-        public UpgradeInfo UpgradeInfo
-        {
-            get
-            {
-                return this.upgradeInfo;
-            }
-            set
-            {
-                this.upgradeInfo = value;
-            }
-        }
-        [SerializeField] private UpgradeInfo upgradeInfo;
 
         public int Value
         {
@@ -90,19 +77,9 @@ namespace HexTecGames.UpgradeSystem
                 maxValue = value;
             }
         }
-
-        public int Tickets
-        {
-            get
-            {
-                return UpgradeInfo.Tickets;
-            }
-        }
-
         private ClampValue maxValue;
 
         private List<ValueChange> multipliers = new List<ValueChange>();
-
 
         private int increasePerLevelUp;
 
@@ -110,13 +87,25 @@ namespace HexTecGames.UpgradeSystem
         public event ValueChangeEvent OnValueChanged;
         public event ValueChangeEvent OnUpgraded;
 
+        public int StartValue
+        {
+            get
+            {
+                return startValue;
+            }
+            private set
+            {
+                startValue = value;
+            }
+        }
+        private int startValue;
+
 
         public Stat()
         { }
         public Stat(StatType statType)
         {
             this.StatType = statType;
-            UpgradeInfo = new UpgradeInfo();
             minValueData = new ClampValueData();
             maxValueData = new ClampValueData();
         }
@@ -136,7 +125,6 @@ namespace HexTecGames.UpgradeSystem
             this.StatType = stat.StatType;
             this.FlatValue = stat.FlatValue;
             this.Value = stat.Value;
-            this.UpgradeInfo = stat.UpgradeInfo;
             if (stat.MinValue != null) this.MinValue = stat.MinValue.CreateCopy();
             if (stat.MaxValue != null) this.MaxValue = stat.MaxValue.CreateCopy();
             this.minValueData = stat.minValueData.CreateCopy();
@@ -224,53 +212,11 @@ namespace HexTecGames.UpgradeSystem
         {
             MinValue = minValueData.GenerateClampValue(ClampType.Min, allStats);
             MaxValue = maxValueData.GenerateClampValue(ClampType.Max, allStats);
-            UpgradeInfo = UpgradeInfo.Create(this, allStats);
             multipliers = new List<ValueChange>();
             UpdateValue();
+            StartValue = Value;
         }
 
-        public void ApplyData(int startValue, UpgradeInfo upgradeInfo)
-        {
-            this.Value = startValue;
-            this.UpgradeInfo = upgradeInfo;
-        }
-
-
-        public bool CanBeMultiUpgrade(Rarity rarity, float efficiency)
-        {
-            if (!IsValidUpgrade(rarity))
-            {
-                return false;
-            }
-            else return UpgradeInfo.CanBeMultiUpgrade(this, rarity, efficiency);
-        }
-        public bool CanBeOverTimeUpgrade(Rarity rarity, float efficiency)
-        {
-            if (!IsValidUpgrade(rarity))
-            {
-                return false;
-            }
-            else return UpgradeInfo.CanBeOverTimeUpgrade(this, rarity, efficiency);
-        }
-
-        public bool IsValidUpgrade(Rarity rarity)
-        {
-            if (upgradeInfo == null)
-            {
-                return false;
-            }
-            bool valid = upgradeInfo.IsValidUpgrade(this, rarity);
-            return valid;
-        }
-        public StatUpgrade GetUpgrade(Rarity rarity, Efficiency singleEfficiency)
-        {
-            return upgradeInfo.GetUpgrade(this, rarity, singleEfficiency);
-        }
-        public void Upgrade(Rarity rarity, float efficiency)
-        {
-            int increase = upgradeInfo.ApplyUpgrade(this, rarity, efficiency);
-            OnUpgraded?.Invoke(this, increase);
-        }
         public override string ToString()
         {
             return $"{StatType.name}: {Value.ToString(StatType.Formatting)}";
@@ -341,7 +287,6 @@ namespace HexTecGames.UpgradeSystem
             return obj is Stat stat &&
                    EqualityComparer<StatType>.Default.Equals(this.StatType, stat.StatType) &&
                    this.Value == stat.Value &&
-                   this.UpgradeInfo == stat.UpgradeInfo &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MinValue, stat.MinValue) &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MaxValue, stat.MaxValue);
         }
@@ -350,7 +295,6 @@ namespace HexTecGames.UpgradeSystem
             return other is not null &&
                    EqualityComparer<StatType>.Default.Equals(this.StatType, other.StatType) &&
                    this.Value == other.Value &&
-                   this.UpgradeInfo == other.UpgradeInfo &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MinValue, other.MinValue) &&
                    EqualityComparer<ClampValue>.Default.Equals(this.MaxValue, other.MaxValue);
         }
@@ -359,7 +303,6 @@ namespace HexTecGames.UpgradeSystem
             HashCode hash = new HashCode();
             hash.Add(this.StatType);
             hash.Add(this.Value);
-            hash.Add(this.UpgradeInfo);
             hash.Add(this.MinValue);
             hash.Add(this.MaxValue);
             return hash.ToHashCode();

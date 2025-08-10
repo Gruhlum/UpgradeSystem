@@ -16,14 +16,15 @@ namespace HexTecGames.UpgradeSystem
 
         public override void Apply()
         {
-            stat.AddLevelUpValue(stat.UpgradeInfo.GetUpgradeValue(stat, rarity, efficiency.Total));
+            //stat.AddLevelUpValue(stat.UpgradeInfo.GetUpgradeValue(stat, rarity, efficiency.Total));
         }
 
         public override TableText GetDescription()
         {
-            TableText result = stat.UpgradeInfo.GetMainDescription(stat, rarity, efficiency);
-            result.multiTexts.Add(new MultiText("Every Level Up"));
-            return result;
+            throw new System.NotImplementedException();
+            //TableText result = stat.UpgradeInfo.GetMainDescription(stat, rarity, efficiency);
+            //result.multiTexts.Add(new MultiText("Every Level Up"));
+            //return result;
         }
 
         public override string GetExtraDescription()

@@ -5,13 +5,13 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public class SingleUpgrade : StatUpgrade
     {
-        public UpgradeInfo UpgradeInfo
-        {
-            get
-            {
-                return Stat.UpgradeInfo;
-            }
-        }
+        //public UpgradeInfo UpgradeInfo
+        //{
+        //    get
+        //    {
+        //        return Stat.UpgradeInfo;
+        //    }
+        //}
 
         public Efficiency Efficiency
         {
@@ -28,23 +28,24 @@ namespace HexTecGames.UpgradeSystem
         private Efficiency efficiency;
 
 
-        public SingleUpgrade(Stat stat, Efficiency efficiency, Rarity rarity, int tickets) : base(stat, rarity, tickets)
+        public SingleUpgrade(Stat stat, UpgradeItem upgradeItem, Rarity rarity, Efficiency efficiency, int tickets)
+            : base(stat, upgradeItem, rarity, tickets)
         {
             this.Efficiency = efficiency;
         }
 
         public override TableText GetDescription()
         {
-            return UpgradeInfo.GetMainDescription(Stat, rarity, Efficiency);
+            return upgradeItem.GetMainDescription(rarity, Efficiency);
         }
         public override string GetExtraDescription()
         {
-            return UpgradeInfo.GetBonusDescription(Stat, rarity);
+            return upgradeItem.GetBonusDescription(rarity, Efficiency);
         }
 
         public override void Apply()
         {
-            Stat.Upgrade(rarity, Efficiency.Total);
+            upgradeItem.Apply(rarity, Efficiency.Total);
         }
     }
 }

@@ -1,26 +1,26 @@
-using System.Collections.Generic;
-using UnityEngine;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-namespace HexTecGames.UpgradeSystem
-{
-    [System.Serializable]
-    public class TotalCondition : Condition
-    {
-        [SerializeField] private int maximumUpgrades = 1;
+//namespace HexTecGames.UpgradeSystem
+//{
+//    [System.Serializable]
+//    public class TotalCondition : Condition
+//    {
+//        [SerializeField] private int maximumUpgrades = 1;
 
-        public TotalCondition(int maximumUpgrades)
-        {
-            this.maximumUpgrades = maximumUpgrades;
-        }
+//        public TotalCondition(int maximumUpgrades)
+//        {
+//            this.maximumUpgrades = maximumUpgrades;
+//        }
 
-        public override Condition Create(List<Stat> allStats)
-        {
-            return new TotalCondition(maximumUpgrades);
-        }
+//        public override Condition Create(List<Stat> allStats)
+//        {
+//            return new TotalCondition(maximumUpgrades);
+//        }
 
-        public override bool IsValid(Stat stat, Rarity rarity)
-        {
-            return maximumUpgrades > stat.UpgradeInfo.TotalUpgrades;
-        }
-    }
-}
+//        public override bool IsValid(Stat stat, Rarity rarity)
+//        {
+//            return maximumUpgrades > stat.UpgradeInfo.TotalUpgrades;
+//        }
+//    }
+//}

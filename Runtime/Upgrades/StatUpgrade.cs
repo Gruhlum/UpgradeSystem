@@ -3,27 +3,18 @@ namespace HexTecGames.UpgradeSystem
     [System.Serializable]
     public abstract class StatUpgrade : Upgrade
     {
-        public Stat Stat
-        {
-            get
-            {
-                return this.stat;
-            }
-            private set
-            {
-                this.stat = value;
-            }
-        }
-        private Stat stat;
+        protected Stat stat;
+        protected UpgradeItem upgradeItem;
 
-        protected StatUpgrade(Stat stat, Rarity rarity, int tickets) : base(rarity, tickets)
+        protected StatUpgrade(Stat stat, UpgradeItem upgradeItem, Rarity rarity, int tickets) : base(rarity, tickets)
         {
-            this.Stat = stat;
+            this.stat = stat;
+            this.upgradeItem = upgradeItem;
         }
 
         public bool CanBeMultiUpgrade(float efficiency)
         {
-            return Stat.CanBeMultiUpgrade(rarity, efficiency);
+            return upgradeItem.CanBeMultiUpgrade(rarity, efficiency);
         }
         public bool CanBeOverTimeUpgrade(float efficiency)
         {
@@ -33,7 +24,7 @@ namespace HexTecGames.UpgradeSystem
                 return false;
             }
 
-            return Stat.CanBeOverTimeUpgrade(rarity, efficiency);
+            return upgradeItem.CanBeOverTimeUpgrade(rarity, efficiency);
         }
     }
 }
