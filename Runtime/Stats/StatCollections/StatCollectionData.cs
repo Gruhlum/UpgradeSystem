@@ -35,5 +35,10 @@ namespace HexTecGames.UpgradeSystem
             }
             return collection;
         }
+
+        public override StatCollection GetStatCollection()
+        {
+            return statCollection; 
+        }
     }
 }

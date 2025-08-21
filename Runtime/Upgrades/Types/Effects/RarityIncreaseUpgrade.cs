@@ -5,10 +5,10 @@ using HexTecGames.Basics.UI;
 using HexTecGames.UpgradeSystem;
 using UnityEngine;
 
-namespace HexTecGames
+namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class RarityIncreaseUpgrade : UpgradeItem
+    public class RarityIncreaseUpgrade : UpgradeEffect
     {
         public StatType secondaryStat;
         public int increase;

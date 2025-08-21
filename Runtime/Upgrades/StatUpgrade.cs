@@ -4,9 +4,9 @@ namespace HexTecGames.UpgradeSystem
     public abstract class StatUpgrade : Upgrade
     {
         protected Stat stat;
-        protected UpgradeItem upgradeItem;
+        protected UpgradeEffect upgradeItem;
 
-        protected StatUpgrade(Stat stat, UpgradeItem upgradeItem, Rarity rarity, int tickets) : base(rarity, tickets)
+        protected StatUpgrade(Stat stat, UpgradeEffect upgradeItem, Rarity rarity, int tickets) : base(rarity, tickets)
         {
             this.stat = stat;
             this.upgradeItem = upgradeItem;

@@ -13,5 +13,7 @@ namespace HexTecGames.UpgradeSystem
         }
 
         public abstract List<Stat> GetStats();
+
+        public abstract StatCollection GetStatCollection();
     }
 }

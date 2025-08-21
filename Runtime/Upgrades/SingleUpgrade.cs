@@ -28,7 +28,7 @@ namespace HexTecGames.UpgradeSystem
         private Efficiency efficiency;
 
 
-        public SingleUpgrade(Stat stat, UpgradeItem upgradeItem, Rarity rarity, Efficiency efficiency, int tickets)
+        public SingleUpgrade(Stat stat, UpgradeEffect upgradeItem, Rarity rarity, Efficiency efficiency, int tickets)
             : base(stat, upgradeItem, rarity, tickets)
         {
             this.Efficiency = efficiency;
