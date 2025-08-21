@@ -8,5 +8,25 @@ namespace HexTecGames.UpgradeSystem
     public class StatUpgradeData : ScriptableObject
     {
         public List<UpgradeItem> upgradeItems;
+
+        public int GetTotalTickets()
+        {
+            if (upgradeItems == null)
+            {
+                return 0;
+            }
+
+            int totalTickets = 0;
+
+            foreach (var item in upgradeItems)
+            {
+                if (item.upgradeEffect != null)
+                {
+                    totalTickets += item.upgradeEffect.tickets;
+                }
+            }
+
+            return totalTickets;
+        }
     }
 }

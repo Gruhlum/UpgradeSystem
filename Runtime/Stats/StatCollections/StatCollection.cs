@@ -7,19 +7,6 @@ namespace HexTecGames.UpgradeSystem
 {
     public abstract class StatCollection : IEnumerable<Stat>
     {
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-        [SerializeField] private string name;
-
         protected List<Stat> stats;
 
         public event Action<Stat, int> OnStatUpgraded;

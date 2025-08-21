@@ -20,5 +20,13 @@ namespace HexTecGames.UpgradeSystem
         }
         [SerializeField] private StatUpgradeData statUpgradeData;
 
+        public int GetTotalTickets()
+        {
+            if (StatUpgradeData == null)
+            {
+                return -1;
+            }
+            return StatUpgradeData.GetTotalTickets();
+        }
     }
 }

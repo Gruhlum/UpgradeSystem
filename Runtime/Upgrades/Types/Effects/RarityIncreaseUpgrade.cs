@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class RarityIncreaseUpgrade : UpgradeEffect
+    public class RarityIncreaseUpgradeEffect : UpgradeEffect
     {
         public StatType secondaryStat;
         public int increase;

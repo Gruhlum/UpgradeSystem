@@ -8,7 +8,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class NormalUpgrade : UpgradeEffect
+    public class NormalUpgradeEffect : UpgradeEffect
     {
         public int increase = 10;
 

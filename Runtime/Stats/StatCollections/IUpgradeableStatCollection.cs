@@ -12,6 +12,8 @@ namespace HexTecGames.UpgradeSystem
             set;
         }
 
+        public int GetTotalTickets();
+
         public List<Stat> GetStats();
     }
 }

@@ -17,7 +17,7 @@ namespace HexTecGames.UpgradeSystem
 
         protected virtual void CopyStats(T target)
         {
-            target.Name = Name;
+            //target.Name = Name;
             stats = GenerateStatList();
 
             List<Stat> originalStats = GetStats();
@@ -25,7 +25,7 @@ namespace HexTecGames.UpgradeSystem
 
             if (originalStats.Count != targetStats.Count)
             {
-                Debug.Log("Not equal number of stats: " + Name + ": " + originalStats.Count + " - " + targetStats.Count);
+                Debug.Log("Not equal number of stats: " + originalStats.Count + " - " + targetStats.Count);
             }
 
             for (int i = 0; i < originalStats.Count; i++)

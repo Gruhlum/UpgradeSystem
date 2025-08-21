@@ -8,13 +8,13 @@ namespace HexTecGames.UpgradeSystem
     {
         public T statCollection;
 
-        private void OnValidate()
-        {
-            if (statCollection != null && string.IsNullOrEmpty(statCollection.Name))
-            {
-                statCollection.Name = this.name.Replace("Data", string.Empty);
-            }
-        }
+        //private void OnValidate()
+        //{
+        //    if (statCollection != null && string.IsNullOrEmpty(statCollection.Name))
+        //    {
+        //        statCollection.Name = this.name.Replace("Data", string.Empty);
+        //    }
+        //}
 
         public void CopyFromStats(T stats)
         {
