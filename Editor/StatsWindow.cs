@@ -24,7 +24,7 @@ namespace HexTecGames.UpgradeSystem.Editor
             window.titleContent = new GUIContent("Stats");
             window.Show();
         }
-        private SimpleEditorTableView<StatUpgradeItem> CreateTable(IUpgradeableStatCollection upgradeableStatCollection)
+        private SimpleEditorTableView<StatUpgradeItem> CreateTable(StatUpgradeData upgradeableStatCollection)
         {
             if (upgradeableStatCollection == null)
             {
@@ -115,14 +115,14 @@ namespace HexTecGames.UpgradeSystem.Editor
         {
             if (playerCollection != null)
             {
-                foreach (StatCollectionDataBase item in playerCollection)
+                foreach (StatUpgradeData item in playerCollection)
                 {
                     EditorUtility.SetDirty(item);
                 }
             }
             if (enemyCollection != null)
             {
-                foreach (StatCollectionDataBase item in enemyCollection)
+                foreach (StatUpgradeData item in enemyCollection)
                 {
                     EditorUtility.SetDirty(item);
                 }
@@ -144,41 +144,27 @@ namespace HexTecGames.UpgradeSystem.Editor
             }
         }
 
-        private StatUpgradeItem[] CreateStatUpgradeItems(StatCollectionDataBase item)
+        private StatUpgradeItem[] CreateStatUpgradeItems(StatUpgradeData statUpgradeData)
         {
             List<StatUpgradeItem> results = new List<StatUpgradeItem>();
 
-            var collection = item.GetStatCollection();
-            StatUpgradeData upgradeList = null;
+            var collection = statUpgradeData.statCollection;
             List<Stat> stats = collection.GetStats();
-
-            if (collection is IUpgradeableStatCollection upgradeStatCollection)
-            {
-                upgradeList = upgradeStatCollection.StatUpgradeData;
-            }
 
             foreach (var stat in stats)
             {
                 var statUpgradeItem = new StatUpgradeItem();
                 statUpgradeItem.stat = stat;
-                if (upgradeList != null)
-                {
-                    statUpgradeItem.upgradeItem = upgradeList.upgradeItems.Find(x => x.statType == stat.StatType);
-                }
+                statUpgradeItem.upgradeItem = statUpgradeData.upgradeItems.Find(x => x.statType == stat.StatType);
                 results.Add(statUpgradeItem);
             }
 
             return results.ToArray();
         }
 
-        private void CreateTableView(StatCollectionDataBase item)
+        private void CreateTableView(StatUpgradeData statUpgradeData)
         {
-            if (item.GetStatCollection() is not IUpgradeableStatCollection upgradeStatCollection)
-            {
-                Debug.LogError("Not inheriting from " + nameof(IUpgradeableStatCollection));
-                return;
-            }
-            _tableView = CreateTable(upgradeStatCollection);
+            _tableView = CreateTable(statUpgradeData);
             DirtyAll();
         }
 
@@ -186,7 +172,7 @@ namespace HexTecGames.UpgradeSystem.Editor
         {
             EditorGUILayout.BeginHorizontal();
 
-            foreach (StatCollectionDataBase item in playerCollection)
+            foreach (StatUpgradeData item in playerCollection)
             {
                 CreateSelectionButton(item);
             }
@@ -195,14 +181,14 @@ namespace HexTecGames.UpgradeSystem.Editor
             //EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
 
-            foreach (StatCollectionDataBase item in enemyCollection)
+            foreach (StatUpgradeData item in enemyCollection)
             {
                 CreateSelectionButton(item);
             }
             EditorGUILayout.EndHorizontal();
         }
 
-        private void CreateSelectionButton(StatCollectionDataBase item)
+        private void CreateSelectionButton(StatUpgradeData item)
         {
             if (GUILayout.Button(item.name))
             {
@@ -210,7 +196,7 @@ namespace HexTecGames.UpgradeSystem.Editor
             }
         }
 
-        private void SelectCollection(StatCollectionDataBase item)
+        private void SelectCollection(StatUpgradeData item)
         {
             CreateTableView(item);
             statUpgradeItems = CreateStatUpgradeItems(item);

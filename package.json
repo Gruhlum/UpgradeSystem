@@ -1,6 +1,6 @@
 {
   "name": "com.hextecgames.upgradesystem",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "displayName": "UpgradeSystem",
   "description": "My Package",
   "unity": "2022.1",
@@ -13,5 +13,6 @@
       "description": "Default Example",
       "path": "Samples/TowerDefense"
     }
-  ]
+  ],
+  "hideInEditor": false
 }

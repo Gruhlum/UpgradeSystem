@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class UpgradeControllerStats : UpgradeableStatCollection<UpgradeControllerStats>, ITicket
+    public class UpgradeControllerStats : CloneableStatCollection<UpgradeControllerStats>, ITicket
     {
         public int Tickets
         {
