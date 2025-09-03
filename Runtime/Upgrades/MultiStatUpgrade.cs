@@ -35,16 +35,17 @@ namespace HexTecGames.UpgradeSystem
 
             return results;
         }
-        public override string GetExtraDescription()
+        public override TableText GetExtraDescription()
         {
-            List<string> results = new List<string>(statUpgrades.Count);
+            return null;
+            //List<string> results = new List<string>(statUpgrades.Count);
 
-            foreach (SingleUpgrade upgrade in statUpgrades)
-            {
-                results.Add(upgrade.GetExtraDescription());
-            }
+            //foreach (SingleUpgrade upgrade in statUpgrades)
+            //{
+            //    results.Add(upgrade.GetExtraDescription());
+            //}
 
-            return string.Join(Environment.NewLine, results);
+            //return string.Join(Environment.NewLine, results);
         }
     }
 }

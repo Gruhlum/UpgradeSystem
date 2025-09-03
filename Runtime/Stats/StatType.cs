@@ -99,6 +99,11 @@ namespace HexTecGames.UpgradeSystem
             }
         }
 
+        public string GetFormattedValue(int value)
+        {
+            return value.ToString(Formatting);
+        }
+
         private void OnValidate()
         {
             if (string.IsNullOrEmpty(ShortName))

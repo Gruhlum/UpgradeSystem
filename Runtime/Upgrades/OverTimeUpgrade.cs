@@ -3,15 +3,13 @@ using HexTecGames.Basics.UI;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class OverTimeUpgrade : Upgrade
+    public class OverTimeUpgrade : SingleUpgrade
     {
-        private Stat stat;
-        private Efficiency efficiency;
 
-        public OverTimeUpgrade(Stat stat, Rarity rarity, Efficiency efficiency, int tickets) : base(rarity, tickets)
+        public OverTimeUpgrade(Stat stat, UpgradeEffect upgradeEffect, Rarity rarity, Efficiency efficiency) 
+            : base(stat, upgradeEffect, rarity, efficiency)
         {
-            this.stat = stat;
-            this.efficiency = efficiency;
+
         }
 
         public override void Apply()
@@ -21,13 +19,12 @@ namespace HexTecGames.UpgradeSystem
 
         public override TableText GetDescription()
         {
-            throw new System.NotImplementedException();
-            //TableText result = stat.UpgradeInfo.GetMainDescription(stat, rarity, efficiency);
-            //result.multiTexts.Add(new MultiText("Every Level Up"));
-            //return result;
+            TableText result = base.GetDescription();
+            result.multiTexts.Add(new MultiText("Every Level Up"));
+            return result;
         }
 
-        public override string GetExtraDescription()
+        public override TableText GetExtraDescription()
         {
             throw new System.NotImplementedException();
         }

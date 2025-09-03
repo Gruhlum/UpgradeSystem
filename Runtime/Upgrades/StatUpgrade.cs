@@ -1,20 +1,48 @@
+using System;
+using HexTecGames.Basics.UI;
+
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
     public abstract class StatUpgrade : Upgrade
     {
-        protected Stat stat;
-        protected UpgradeEffect upgradeItem;
+        private Stat stat;
+        private UpgradeEffect upgradeEffect;
 
-        protected StatUpgrade(Stat stat, UpgradeEffect upgradeItem, Rarity rarity, int tickets) : base(rarity, tickets)
+        public Stat Stat
         {
-            this.stat = stat;
-            this.upgradeItem = upgradeItem;
+            get
+            {
+                return this.stat;
+            }
+
+            private set
+            {
+                this.stat = value;
+            }
+        }
+
+        public UpgradeEffect UpgradeEffect
+        {
+            get
+            {
+                return this.upgradeEffect;
+            }
+            private set
+            {
+                this.upgradeEffect = value;
+            }
+        }
+
+        protected StatUpgrade(Stat stat, UpgradeEffect upgradeEffect, Rarity rarity) : base(rarity, upgradeEffect.tickets)
+        {
+            this.Stat = stat;
+            this.UpgradeEffect = upgradeEffect;
         }
 
         public bool CanBeMultiUpgrade(float efficiency)
         {
-            return upgradeItem.CanBeMultiUpgrade(rarity, efficiency);
+            return UpgradeEffect.CanBeMultiUpgrade(rarity, efficiency);
         }
         public bool CanBeOverTimeUpgrade(float efficiency)
         {
@@ -24,7 +52,17 @@ namespace HexTecGames.UpgradeSystem
                 return false;
             }
 
-            return upgradeItem.CanBeOverTimeUpgrade(rarity, efficiency);
+            return UpgradeEffect.CanBeOverTimeUpgrade(rarity, efficiency);
+        }
+
+        public bool CanBeMultiUpgrade(Rarity rarity, float efficiency)
+        {
+            return UpgradeEffect.CanBeMultiUpgrade(rarity, efficiency);
+        }
+
+        public bool CanBeOverTimeUpgrade(Rarity rarity, float efficiency)
+        {
+            return UpgradeEffect.CanBeOverTimeUpgrade(rarity, efficiency);
         }
     }
 }

@@ -9,6 +9,13 @@ namespace HexTecGames
     [CreateAssetMenu(menuName = "HexTecGames/Sandbox/UpgradeList")]
     public class UpgradeList : ScriptableObject
     {
+        public StatCollectionDataBase StatCollection
+        {
+            get
+            {
+                return statCollection;
+            }
+        }
         [SerializeField] private StatCollectionDataBase statCollection = default;
         [SubclassSelector, SerializeReference] public List<UpgradeItem> upgradeItems;
 

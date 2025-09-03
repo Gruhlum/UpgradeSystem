@@ -28,7 +28,7 @@ namespace HexTecGames.UpgradeSystem
         }
         public abstract TableText GetDescription();
 
-        public abstract string GetExtraDescription();
+        public abstract TableText GetExtraDescription();
 
         public abstract void Apply();
     }

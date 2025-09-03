@@ -1,16 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
-{    
+{
     [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/StatUpgradeData")]
-    public class StatUpgradeData : ScriptableObject
+    public class StatUpgradeData : ScriptableObject, ITicket
     {
         public StatCollectionDataBase statCollection;
         public List<UpgradeItem> upgradeItems;
 
+        public int Tickets
+        {
+            get
+            {
+                return tickets;
+            }
+        }
+        [SerializeField] private int tickets = 100;
         public List<Stat> GetStats()
         {
             if (statCollection == null)
@@ -38,6 +47,21 @@ namespace HexTecGames.UpgradeSystem
             }
 
             return totalTickets;
+        }
+
+        public IEnumerable<StatUpgrade> GetValidUpgrades(StatCollection stats, Rarity rarity, Efficiency singleEfficiency)
+        {
+            List<StatUpgrade> results = new List<StatUpgrade>();
+
+            foreach (var upgradeItem in upgradeItems)
+            {
+                var result = upgradeItem.GetValidUpgrade(stats, rarity, singleEfficiency);
+                if (result != null)
+                {
+                    results.Add(result);
+                }
+            }
+            return results;
         }
     }
 }
