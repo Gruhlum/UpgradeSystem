@@ -87,6 +87,20 @@ namespace HexTecGames.UpgradeSystem
         public event ValueChangeEvent OnValueChanged;
         public event ValueChangeEvent OnUpgraded;
 
+        public int TotalLevelUps
+        {
+            get
+            {
+                return totalLevelUps;
+            }
+            private set
+            {
+                totalLevelUps = value;
+            }
+        }
+        private int totalLevelUps;
+
+
         public int StartValue
         {
             get
@@ -143,6 +157,7 @@ namespace HexTecGames.UpgradeSystem
 
         public void LevelUp()
         {
+            TotalLevelUps++;
             if (increasePerLevelUp <= 0)
             {
                 return;

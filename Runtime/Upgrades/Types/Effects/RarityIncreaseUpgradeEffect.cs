@@ -36,10 +36,6 @@ namespace HexTecGames.UpgradeSystem
             //    return new MultiStatUpgrade(new List<SingleUpgrade>() { upgrade, secondUpgrade }, rarity, tickets);
             //}
         }
-        public override void Apply(StatUpgrade upgrade)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public override bool CanBeMultiUpgrade(Rarity rarity, float efficiency)
         {
@@ -51,18 +47,16 @@ namespace HexTecGames.UpgradeSystem
             return false;
         }
 
-        public override TableText GetMainDescription(SingleUpgrade statUpgrade)
-        {
-            throw new System.NotImplementedException();
-        }
-        public override TableText GetBonusDescription(SingleUpgrade statUpgrade)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override bool IsValidUpgrade(Stat stat, Rarity rarity, float efficiency)
         {
             return true;
+        }
+
+        protected override int CalculateIncrease(SingleUpgrade singleUpgrade)
+        {
+            int rarityDifference = singleUpgrade.rarity - rarity.GetRarity(singleUpgrade.Stat.TotalLevelUps);
+            var result = increase * (1 + (rarityDifference / 2));
+            return result;
         }
     }
 }

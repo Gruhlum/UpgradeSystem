@@ -190,7 +190,7 @@ namespace HexTecGames.UpgradeSystem.Editor
 
         private void CreateSelectionButton(StatUpgradeData item)
         {
-            if (GUILayout.Button(item.name))
+            if (GUILayout.Button(item.statCollection.name))
             {
                 SelectCollection(item);
             }

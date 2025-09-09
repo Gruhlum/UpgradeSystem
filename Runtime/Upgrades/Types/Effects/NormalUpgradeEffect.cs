@@ -16,10 +16,6 @@ namespace HexTecGames.UpgradeSystem
         {
             return new SingleUpgrade(stat, this, rarity, singleEfficiency);
         }
-        public override void Apply(StatUpgrade upgrade)
-        {
-            upgrade.Stat.FlatValue += increase;
-        }
 
         public override bool CanBeMultiUpgrade(Rarity rarity, float efficiency)
         {
@@ -35,17 +31,11 @@ namespace HexTecGames.UpgradeSystem
             return true;
         }
 
-        private int CalculateIncrease(Efficiency efficiency)
+        protected override int CalculateIncrease(SingleUpgrade singleUpgrade)
         {
-            return Mathf.RoundToInt(increase * efficiency.Total);
+            return Mathf.RoundToInt(increase * rarity.GetMultiplier() * singleUpgrade.Efficiency.Total);
         }
 
-        public override TableText GetMainDescription(SingleUpgrade upgrade)
-        {
-            int totalIncrease = CalculateIncrease(upgrade.Efficiency);
-            TableText description = new TableText($"+{upgrade.Stat.StatType.GetFormattedValue(totalIncrease)} {upgrade.Stat.StatType.name}");
-            return description;
-        }
         public override TableText GetBonusDescription(SingleUpgrade upgrade)
         {
             throw new NotImplementedException();
