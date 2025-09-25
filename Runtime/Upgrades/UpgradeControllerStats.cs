@@ -5,21 +5,8 @@ using UnityEngine;
 namespace HexTecGames.UpgradeSystem
 {
     [System.Serializable]
-    public class UpgradeControllerStats : CloneableStatCollection<UpgradeControllerStats>, ITicket
+    public class UpgradeControllerStats : CloneableStatCollection<UpgradeControllerStats>
     {
-        public int Tickets
-        {
-            get
-            {
-                return tickets;
-            }
-            private set
-            {
-                tickets = value;
-            }
-        }
-        [SerializeField] private int tickets;
-
         public Stat TotalUpgrades
         {
             get
@@ -190,12 +177,6 @@ namespace HexTecGames.UpgradeSystem
         }
 
 
-        protected override void CopyStats(UpgradeControllerStats target)
-        {
-            target.Tickets = Tickets;
-
-            base.CopyStats(target);
-        }
         protected override UpgradeControllerStats InstantiateCopy()
         {
             return new UpgradeControllerStats();

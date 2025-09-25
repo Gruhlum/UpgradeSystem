@@ -45,10 +45,5 @@ namespace HexTecGames.UpgradeSystem
         {
             return increase * rarity.GetMultiplier();
         }
-
-        public override bool IsValidUpgrade(Stat stat, Rarity rarity, float efficiency)
-        {
-            return true;
-        }
     }
 }

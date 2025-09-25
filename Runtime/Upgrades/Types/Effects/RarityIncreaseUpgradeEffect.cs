@@ -49,7 +49,11 @@ namespace HexTecGames.UpgradeSystem
 
         public override bool IsValidUpgrade(Stat stat, Rarity rarity, float efficiency)
         {
-            return true;
+            if ((this.rarity.GetIndex() + stat.TotalLevelUps) <= rarity.GetIndex())
+            {
+                return true;
+            }
+            return false;
         }
 
         protected override int CalculateIncrease(SingleUpgrade singleUpgrade)

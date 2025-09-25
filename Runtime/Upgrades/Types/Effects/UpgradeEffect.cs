@@ -15,7 +15,14 @@ namespace HexTecGames.UpgradeSystem
         {
             upgrade.Stat.FlatValue += CalculateIncrease(upgrade);
         }
-        public abstract bool IsValidUpgrade(Stat stat, Rarity rarity, float efficiency);
+        public virtual bool IsValidUpgrade(Stat stat, Rarity rarity, float efficiency)
+        {
+            if (this.rarity <= rarity)
+            {
+                return true;
+            }
+            return false;
+        }
         public abstract StatUpgrade GetUpgrade(Stat stat, Rarity rarity, Efficiency singleEfficiency);
         public abstract bool CanBeMultiUpgrade(Rarity rarity, float efficiency);
         public abstract bool CanBeOverTimeUpgrade(Rarity rarity, float efficiency);
