@@ -1,31 +1,26 @@
 using System.Collections.Generic;
+using HexTecGames.Basics;
 using UnityEngine;
 
 namespace HexTecGames.UpgradeSystem
 {
     [CreateAssetMenu(menuName = "HexTecGames/UpgradeSystem/RarityCollection")]
-    public class RarityCollection : ScriptableObject
+    public class RarityCollection : ScriptableObjectCollection<Rarity>
     {
-        [SerializeField] private List<Rarity> rarities = default;
-
         public Rarity GetRarity(Rarity rarity, int change)
         {
-            int index = rarities.IndexOf(rarity);
+            int index = Items.IndexOf(rarity);
             index += change;
-            index = Mathf.Clamp(index, 0, rarities.Count - 1);
-            return rarities[index];
+            index = Mathf.Clamp(index, 0, Items.Count - 1);
+            return Items[index];
         }
         public Rarity GetRarityByIndex(int index)
         {
-            if (index < 0 || index >= rarities.Count)
+            if (index < 0 || index >= Items.Count)
             {
                 return null;
             }
-            return rarities[index];
-        }
-        public int GetIndex(Rarity rarity)
-        {
-            return rarities.IndexOf(rarity);
+            return Items[index];
         }
     }
 }
