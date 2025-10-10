@@ -1,6 +1,6 @@
 {
   "name": "com.hextecgames.upgradesystem",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "displayName": "UpgradeSystem",
   "description": "My Package",
   "unity": "2022.1",
@@ -14,5 +14,10 @@
       "path": "Samples/TowerDefense"
     }
   ],
-  "hideInEditor": false
+  "hideInEditor": false,
+  "dependencies": {
+    "com.hextecgames.basics": "1.0.0",
+    "com.hextecgames.easefunctions": "1.0.0",
+    "com.unity.textmeshpro": "1.0.0"
+  }
 }
